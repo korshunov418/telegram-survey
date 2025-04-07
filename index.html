@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опросник</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Опросник</h1>
+        <form id="surveyForm">
+            <div class="question">
+                <label for="question1">1. Как часто вы пользуетесь Telegram?</label>
+                <select id="question1" name="question1">
+                    <option value="daily">Ежедневно</option>
+                    <option value="weekly">Несколько раз в неделю</option>
+                    <option value="monthly">Несколько раз в месяц</option>
+                    <option value="rarely">Редко</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label for="question2">2. Как вы оцениваете удобство Mini Apps?</label>
+                <select id="question2" name="question2">
+                    <option value="5">Отлично</option>
+                    <option value="4">Хорошо</option>
+                    <option value="3">Удовлетворительно</option>
+                    <option value="2">Плохо</option>
+                    <option value="1">Очень плохо</option>
+                </select>
+            </div>
+
+            <div class="question">
+                <label for="question3">3. Что бы вы хотели улучшить в Mini Apps?</label>
+                <textarea id="question3" name="question3" rows="4"></textarea>
+            </div>
+
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
