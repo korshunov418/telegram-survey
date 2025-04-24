@@ -104,35 +104,47 @@
                 <textarea id="comments" rows="3"></textarea>
             </div>
 
-            <!-- Поле 11-13: Платно/бесплатно -->
-            <div class="form-group">
-                <label>Мероприятие платное?</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="isPaid" value="no" checked onclick="togglePaymentFields()"> Бесплатное</label>
-                    <label><input type="radio" name="isPaid" value="yes" onclick="togglePaymentFields()"> Платное</label>
-                </div>
-            </div>
-
-            <div id="paymentFields" style="display: none;">
-                <!-- Поле 12: Тип оплаты -->
-                <div class="form-group">
-                    <label>Тип оплаты</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="paymentType" value="prepayment"> Предоплата</label>
-                        <label><input type="radio" name="paymentType" value="postpayment"> Постоплата</label>
+            <!-- Поле 11: Платно/бесплатно -->
+                    <div class="form-group">
+                        <label>Мероприятие платное?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="isPaid" value="no" checked onclick="togglePaymentFields()"> Бесплатное</label>
+                            <label><input type="radio" name="isPaid" value="yes" onclick="togglePaymentFields()"> Платное</label>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Поле 13: Стоимость -->
-                <div class="form-group">
-                    <label for="costType">Тип стоимости</label>
-                    <select id="costType" onchange="updateCostFields()">
-                        <option value="fixed">Фиксированная</option>
-                        <option value="split">Делится между участниками</option>
-                    </select>
-                    <input type="number" id="costAmount" placeholder="Сумма в рублях" min="1">
-                </div>
-            </div>
+                    
+                    <!-- Блок платных опций (изначально скрыт) -->
+                    <div id="paymentFields" style="display: none;">
+                        <!-- Поле 12: Тип оплаты -->
+                        <div class="form-group">
+                            <label>Тип оплаты*</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="paymentType" value="prepayment" required> Предоплата</label>
+                                <label><input type="radio" name="paymentType" value="postpayment"> Постоплата</label>
+                            </div>
+                        </div>
+                    
+                        <!-- Поле 13: Способ расчета стоимости -->
+                        <div class="form-group">
+                            <label>Способ расчета стоимости*</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="costType" value="fixed" checked onclick="toggleCostFields()"> Фиксированная сумма</label>
+                                <label><input type="radio" name="costType" value="split" onclick="toggleCostFields()"> Делится между участниками</label>
+                            </div>
+                        </div>
+                    
+                        <!-- Поле для фиксированной суммы -->
+                        <div id="fixedCostField" class="form-group">
+                            <label for="fixedAmount">Сумма с человека (руб)*</label>
+                            <input type="number" id="fixedAmount" min="1" step="1">
+                        </div>
+                    
+                        <!-- Поле для общей суммы -->
+                        <div id="totalCostField" class="form-group" style="display: none;">
+                            <label for="totalAmount">Общая сумма (руб)*</label>
+                            <input type="number" id="totalAmount" min="1" step="1">
+                        </div>
+                    </div>
 
             <button type="button" class="submit-btn" onclick="submitForm()">Создать событие</button>
         </form>
