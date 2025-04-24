@@ -212,7 +212,81 @@ function getPaymentData() {
         costAmount: document.getElementById('costAmount').value || null
     };
 }
+// Показываем/скрываем поля оплаты
+function togglePaymentFields() {
+    const isPaid = document.querySelector('input[name="isPaid"]:checked').value === 'yes';
+    document.getElementById('paymentFields').style.display = isPaid ? 'block' : 'none';
+    
+    // Сбрасываем валидацию при переключении
+    if (!isPaid) {
+        document.querySelectorAll('#paymentFields input').forEach(input => {
+            input.removeAttribute('required');
+        });
+    }
+}
 
+// Переключаем поля стоимости
+function toggleCostFields() {
+    const costType = document.querySelector('input[name="costType"]:checked').value;
+    document.getElementById('fixedCostField').style.display = 
+        costType === 'fixed' ? 'block' : 'none';
+    document.getElementById('totalCostField').style.display = 
+        costType === 'split' ? 'block' : 'none';
+}
+
+// Валидация перед отправкой
+function validatePaymentFields() {
+    const isPaid = document.querySelector('input[name="isPaid"]:checked').value === 'yes';
+    if (!isPaid) return true;
+
+    // Проверяем тип оплаты
+    if (!document.querySelector('input[name="paymentType"]:checked')) {
+        alert('Укажите тип оплаты (предоплата/постоплата)');
+        return false;
+    }
+
+    // Проверяем стоимость
+    const costType = document.querySelector('input[name="costType"]:checked').value;
+    if (costType === 'fixed' && !document.getElementById('fixedAmount').value) {
+        alert('Укажите фиксированную сумму');
+        return false;
+    }
+    if (costType === 'split' && !document.getElementById('totalAmount').value) {
+        alert('Укажите общую сумму');
+        return false;
+    }
+
+    return true;
+}
+
+// Обновляем функцию submitForm()
+function submitForm() {
+    // ... существующая валидация ...
+    
+    if (!validatePaymentFields()) return;
+    
+    const formData = {
+        // ... другие поля ...
+        payment: getPaymentData()
+    };
+    
+    Telegram.WebApp.sendData(JSON.stringify(formData));
+    Telegram.WebApp.close();
+}
+
+// Получаем данные по оплате
+function getPaymentData() {
+    const isPaid = document.querySelector('input[name="isPaid"]:checked').value === 'yes';
+    if (!isPaid) return null;
+
+    return {
+        paymentType: document.querySelector('input[name="paymentType"]:checked').value,
+        costType: document.querySelector('input[name="costType"]:checked').value,
+        amount: document.querySelector('input[name="costType"]:checked').value === 'fixed' 
+            ? document.getElementById('fixedAmount').value 
+            : document.getElementById('totalAmount').value
+    };
+}
 // Инициализация формы
 document.addEventListener('DOMContentLoaded', function() {
     // Устанавливаем минимальную дату (сегодня)
