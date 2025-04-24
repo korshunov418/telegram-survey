@@ -3,43 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Опросник</title>
+    <title>Создание события</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Опросник</h1>
-        <form id="surveyForm">
-            <div class="question">
-                <label for="question1">1. Как часто вы пользуетесь Telegram?</label>
-                <select id="question1" name="question1">
-                    <option value="daily">Ежедневно</option>
-                    <option value="weekly">Несколько раз в неделю</option>
-                    <option value="monthly">Несколько раз в месяц</option>
-                    <option value="rarely">Редко</option>
+        <h1>Создание события</h1>
+        <form id="eventForm">
+            <!-- Поле 0: Название события -->
+            <div class="form-group">
+                <label for="eventName">Название события*</label>
+                <input type="text" id="eventName" required>
+            </div>
+
+            <!-- Поле 1: Периодичность -->
+            <div class="form-group">
+                <label for="frequency">Периодичность*</label>
+                <select id="frequency" onchange="updateFrequencyFields()" required>
+                    <option value="">Выберите тип</option>
+                    <option value="single">Разовая</option>
+                    <option value="yearly">Годовая</option>
+                    <option value="monthly">Ежемесячная</option>
+                    <option value="weekly">Еженедельная</option>
                 </select>
             </div>
 
-            <div class="question">
-                <label for="question2">2. Как вы оцениваете удобство Mini Apps?</label>
-                <select id="question2" name="question2">
-                    <option value="5">Отлично</option>
-                    <option value="4">Хорошо</option>
-                    <option value="3">Удовлетворительно</option>
-                    <option value="2">Плохо</option>
-                    <option value="1">Очень плохо</option>
+            <!-- Динамические поля для периодичности -->
+            <div id="frequencyFields"></div>
+
+            <!-- Поле 3: Время начала -->
+            <div class="form-group">
+                <label for="startTime">Время начала*</label>
+                <input type="time" id="startTime" required>
+            </div>
+
+            <!-- Поле 4: Продолжительность -->
+            <div class="form-group">
+                <label for="duration">Продолжительность</label>
+                <select id="duration">
+                    <option value="">Не указывать</option>
+                    <option value="30min">30 минут</option>
+                    <option value="1h">1 час</option>
+                    <option value="2h">2 часа</option>
+                    <option value="custom">Указать свою</option>
                 </select>
+                <input type="text" id="customDuration" placeholder="Например: 1.5 часа" style="display: none;">
             </div>
 
-            <div class="question">
-                <label for="question3">3. Что бы вы хотели улучшить в Mini Apps?</label>
-                <textarea id="question3" name="question3" rows="4"></textarea>
+            <!-- Поле 5: Опрос участников -->
+            <div class="form-group">
+                <label>Начинать опрос участников до начала</label>
+                <div class="row">
+                    <input type="number" id="pollBeforeValue" min="1" value="1">
+                    <select id="pollBeforeUnit">
+                        <option value="minutes">Минут</option>
+                        <option value="hours">Часов</option>
+                        <option value="days">Дней</option>
+                    </select>
+                </div>
             </div>
 
-            <button type="submit">Отправить</button>
+            <!-- Поле 6: Ограничение участников -->
+            <div class="form-group">
+                <label for="maxParticipants">Ограничение участников</label>
+                <input type="number" id="maxParticipants" min="1" placeholder="Оставьте пустым, если нет ограничений">
+            </div>
+
+            <!-- Поле 7: Резерв -->
+            <div class="form-group" id="reserveGroup" style="display: none;">
+                <label>Добавлять избыточных участников в резерв?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="reserve" value="yes"> Да</label>
+                    <label><input type="radio" name="reserve" value="no" checked> Нет</label>
+                </div>
+            </div>
+
+            <!-- Поле 8: Завершение опроса -->
+            <div class="form-group">
+                <label>Завершать опрос до окончания</label>
+                <div class="row">
+                    <input type="number" id="pollCloseBeforeValue" min="1" value="1">
+                    <select id="pollCloseBeforeUnit">
+                        <option value="minutes">Минут</option>
+                        <option value="hours">Часов</option>
+                        <option value="days">Дней</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Поле 9: Место проведения -->
+            <div class="form-group">
+                <label for="location">Место проведения</label>
+                <input type="text" id="location" placeholder="Онлайн или адрес">
+            </div>
+
+            <!-- Поле 10: Комментарий -->
+            <div class="form-group">
+                <label for="comments">Комментарий</label>
+                <textarea id="comments" rows="3"></textarea>
+            </div>
+
+            <!-- Поле 11-13: Платно/бесплатно -->
+            <div class="form-group">
+                <label>Мероприятие платное?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="isPaid" value="no" checked onclick="togglePaymentFields()"> Бесплатное</label>
+                    <label><input type="radio" name="isPaid" value="yes" onclick="togglePaymentFields()"> Платное</label>
+                </div>
+            </div>
+
+            <div id="paymentFields" style="display: none;">
+                <!-- Поле 12: Тип оплаты -->
+                <div class="form-group">
+                    <label>Тип оплаты</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="paymentType" value="prepayment"> Предоплата</label>
+                        <label><input type="radio" name="paymentType" value="postpayment"> Постоплата</label>
+                    </div>
+                </div>
+
+                <!-- Поле 13: Стоимость -->
+                <div class="form-group">
+                    <label for="costType">Тип стоимости</label>
+                    <select id="costType" onchange="updateCostFields()">
+                        <option value="fixed">Фиксированная</option>
+                        <option value="split">Делится между участниками</option>
+                    </select>
+                    <input type="number" id="costAmount" placeholder="Сумма в рублях" min="1">
+                </div>
+            </div>
+
+            <button type="button" class="submit-btn" onclick="submitForm()">Создать событие</button>
         </form>
     </div>
-
-    <script src="script.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
