@@ -5,29 +5,7 @@ body {
     padding: 0;
     color: #333;
 }
-/* Стили для радио-кнопок */
-.radio-group {
-    display: flex;
-    gap: 15px;
-    margin-top: 5px;
-}
 
-.radio-group label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: normal;
-    cursor: pointer;
-}
-
-/* Анимация появления полей */
-#paymentFields {
-    transition: all 0.3s ease;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    margin-top: 10px;
-}
 .container {
     max-width: 600px;
     margin: 0 auto;
@@ -86,6 +64,14 @@ select {
     margin-top: 5px;
 }
 
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
 .checkbox-group {
     display: flex;
     flex-wrap: wrap;
@@ -116,7 +102,13 @@ select {
     background-color: #2980b9;
 }
 
-/* Адаптивность */
+#paymentFields {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
 @media (max-width: 480px) {
     .container {
         padding: 15px;
