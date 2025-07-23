@@ -3,152 +3,886 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создание события</title>
+    <title id="pageTitle">Опросник для мероприятия</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .question {
+            margin: 20px 0;
+        }
+        .question label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .option {
+            margin: 10px 0;
+        }
+        select, input[type="text"], input[type="date"], input[type="time"], input[type="number"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .duration-container, .poll-start-container, .poll-end-container {
+            display: flex;
+            gap: 10px;
+        }
+        .duration-container input, .poll-start-container input, .poll-end-container input {
+            flex: 1;
+        }
+        .duration-container select, .poll-start-container select, .poll-end-container select {
+            flex: 1;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #006699;
+        }
+        .hidden {
+            display: none;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .calendar div {
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .calendar div.selected {
+            background-color: #0088cc;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Создание события</h1>
-        <form id="eventForm">
-            <!-- Поле 0: Название события -->
-            <div class="form-group">
-                <label for="eventName">Название события*</label>
-                <input type="text" id="eventName" required>
-            </div>
-
-            <!-- Поле 1: Периодичность -->
-            <div class="form-group">
-                <label for="frequency">Периодичность*</label>
-                <select id="frequency" onchange="updateFrequencyFields()" required>
-                    <option value="">Выберите тип</option>
-                    <option value="single">Разовая</option>
-                    <option value="yearly">Годовая</option>
-                    <option value="monthly">Ежемесячная</option>
-                    <option value="weekly">Еженедельная</option>
+        <h1 id="formTitle">Опросник для мероприятия</h1>
+        <div id="quiz">
+            <div class="question">
+                <label id="labelLanguage">1. Выбор языка</label>
+                <select id="language" onchange="updateLanguage()">
+                    <option value="ru" selected>Русский</option>
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
                 </select>
             </div>
-
-            <!-- Динамические поля для периодичности -->
-            <div id="frequencyFields"></div>
-
-            <!-- Поле 3: Время начала -->
-            <div class="form-group">
-                <label for="startTime">Время начала*</label>
-                <input type="time" id="startTime" required>
+            <div class="question">
+                <label id="labelEventName">2. Название события</label>
+                <input type="text" id="eventName" placeholder="Введите название">
             </div>
-
-            <!-- Поле 4: Продолжительность -->
-            <div class="form-group">
-                <label for="duration">Продолжительность</label>
-                <select id="duration">
-                    <option value="">Не указывать</option>
-                    <option value="30min">30 минут</option>
-                    <option value="1h">1 час</option>
-                    <option value="2h">2 часа</option>
-                    <option value="custom">Указать свою</option>
+            <div class="question">
+                <label id="labelFrequency">3. Периодичность встреч</label>
+                <select id="frequency" onchange="toggleFrequencyOptions()">
+                    <option value="Разовая">Разовая</option>
+                    <option value="Регулярная" selected>Регулярная</option>
                 </select>
-                <input type="text" id="customDuration" placeholder="Например: 1.5 часа" style="display: none;">
             </div>
-
-            <!-- Поле 5: Опрос участников -->
-            <div class="form-group">
-                <label>Начинать опрос участников до начала</label>
-                <div class="row">
-                    <input type="number" id="pollBeforeValue" min="1" value="1">
-                    <select id="pollBeforeUnit">
-                        <option value="minutes">Минут</option>
-                        <option value="hours">Часов</option>
-                        <option value="days">Дней</option>
+            <div class="question hidden" id="regularOptions">
+                <label id="labelRegularFrequency">4. Периодичность регулярных встреч</label>
+                <select id="regularFrequency" onchange="toggleRegularOptions()">
+                    <option value="Годовая">Годовая</option>
+                    <option value="Ежемесячная">Ежемесячная</option>
+                    <option value="Еженедельная" selected>Еженедельная</option>
+                </select>
+            </div>
+            <div class="question hidden" id="oneTimeDate">
+                <label id="labelOneTimeDate">5. Дата начала (для разовой встречи)</label>
+                <input type="date" id="startDate">
+            </div>
+            <div class="question hidden" id="yearlyDates">
+                <label id="labelYearlyDates">5. Выберите даты для годовых встреч</label>
+                <div id="yearlyCalendar" class="calendar"></div>
+            </div>
+            <div class="question hidden" id="monthlyDayNumber">
+                <label id="labelMonthlyDayNumber">5. Выберите число месяца для ежемесячных встреч</label>
+                <input type="number" id="dayNumber" min="1" max="31" placeholder="Например, 15">
+            </div>
+            <div class="question hidden" id="weeklyDays">
+                <label id="labelWeeklyDays">5. Выберите дни недели для еженедельных встреч</label>
+                <div id="weeklyDaysCalendar" class="calendar">
+                    <div data-day="Понедельник">Понедельник</div>
+                    <div data-day="Вторник">Вторник</div>
+                    <div data-day="Среда">Среда</div>
+                    <div data-day="Четверг">Четверг</div>
+                    <div data-day="Пятница">Пятница</div>
+                    <div data-day="Суббота">Суббота</div>
+                    <div data-day="Воскресенье">Воскресенье</div>
+                </div>
+            </div>
+            <div class="question">
+                <label id="labelStartTime">6. Время начала встречи</label>
+                <input type="time" id="startTime">
+            </div>
+            <div class="question">
+                <label id="labelDuration">7. Продолжительность</label>
+                <div class="duration-container">
+                    <input type="number" id="durationValue" min="1" placeholder="Введите число">
+                    <select id="durationUnit">
+                        <option value="Минуты">Минуты</option>
+                        <option value="Часы">Часы</option>
+                        <option value="Дни">Дни</option>
                     </select>
                 </div>
             </div>
-
-            <!-- Поле 6: Ограничение участников -->
-            <div class="form-group">
-                <label for="maxParticipants">Ограничение участников</label>
-                <input type="number" id="maxParticipants" min="1" placeholder="Оставьте пустым, если нет ограничений">
-            </div>
-
-            <!-- Поле 7: Резерв -->
-            <div class="form-group" id="reserveGroup" style="display: none;">
-                <label>Добавлять избыточных участников в резерв?</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="reserve" value="yes"> Да</label>
-                    <label><input type="radio" name="reserve" value="no" checked> Нет</label>
-                </div>
-            </div>
-
-            <!-- Поле 8: Завершение опроса -->
-            <div class="form-group">
-                <label>Завершать опрос до окончания</label>
-                <div class="row">
-                    <input type="number" id="pollCloseBeforeValue" min="1" value="1">
-                    <select id="pollCloseBeforeUnit">
-                        <option value="minutes">Минут</option>
-                        <option value="hours">Часов</option>
-                        <option value="days">Дней</option>
+            <div class="question">
+                <label id="labelPollStart">8. Начинать опрос участников до начала за</label>
+                <div class="poll-start-container">
+                    <input type="number" id="pollStartValue" min="1" placeholder="Введите число">
+                    <select id="pollStartUnit">
+                        <option value="Минуты">Минуты</option>
+                        <option value="Часы">Часы</option>
+                        <option value="Дни">Дни</option>
                     </select>
                 </div>
             </div>
-
-            <!-- Поле 9: Место проведения -->
-            <div class="form-group">
-                <label for="location">Место проведения</label>
-                <input type="text" id="location" placeholder="Онлайн или адрес">
-            </div>
-
-            <!-- Поле 10: Комментарий -->
-            <div class="form-group">
-                <label for="comments">Комментарий</label>
-                <textarea id="comments" rows="3"></textarea>
-            </div>
-
-            <!-- Поле 11: Платно/бесплатно -->
-            <div class="form-group">
-                <label>Мероприятие платное?</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="isPaid" value="no" checked onclick="togglePaymentFields()"> Бесплатное</label>
-                    <label><input type="radio" name="isPaid" value="yes" onclick="togglePaymentFields()"> Платное</label>
+            <div class="question">
+                <label id="labelPollEnd">9. Заканчивать опрос до окончания за</label>
+                <div class="poll-end-container">
+                    <input type="number" id="pollEndValue" min="1" placeholder="Введите число">
+                    <select id="pollEndUnit">
+                        <option value="Минуты">Минуты</option>
+                        <option value="Часы">Часы</option>
+                        <option value="Дни">Дни</option>
+                    </select>
                 </div>
             </div>
-
-            <!-- Поля для платных мероприятий -->
-            <div id="paymentFields" style="display: none;">
-                <!-- Поле 12: Тип оплаты -->
-                <div class="form-group">
-                    <label>Тип оплаты*</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="paymentType" value="prepayment" required> Предоплата</label>
-                        <label><input type="radio" name="paymentType" value="postpayment"> Постоплата</label>
-                    </div>
-                </div>
-
-                <!-- Поле 13: Стоимость -->
-                <div class="form-group">
-                    <label>Способ расчета стоимости*</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="costType" value="fixed" checked onclick="toggleCostFields()"> Фиксированная сумма</label>
-                        <label><input type="radio" name="costType" value="split" onclick="toggleCostFields()"> Делится между участниками</label>
-                    </div>
-                </div>
-
-                <!-- Фиксированная стоимость -->
-                <div id="fixedCostField" class="form-group">
-                    <label for="fixedAmount">Сумма с человека (руб)*</label>
-                    <input type="number" id="fixedAmount" min="1">
-                </div>
-
-                <!-- Общая стоимость -->
-                <div id="totalCostField" class="form-group" style="display: none;">
-                    <label for="totalAmount">Общая сумма (руб)*</label>
-                    <input type="number" id="totalAmount" min="1">
-                </div>
+            <div class="question">
+                <label id="labelCityTimezone">10. Город и часовой пояс</label>
+                <select id="cityTimezone">
+                    <option value="Бейкер-Айленд (UTC-12:00)">Бейкер-Айленд (UTC-12:00)</option>
+                    <option value="Паго-Паго (UTC-11:00)">Паго-Паго (UTC-11:00)</option>
+                    <option value="Гонолулу (UTC-10:00)">Гонолулу (UTC-10:00)</option>
+                    <option value="Анкоридж (UTC-9:00)">Анкоридж (UTC-9:00)</option>
+                    <option value="Лос-Анджелес (UTC-8:00)">Лос-Анджелес (UTC-8:00)</option>
+                    <option value="Денвер (UTC-7:00)">Денвер (UTC-7:00)</option>
+                    <option value="Чикаго (UTC-6:00)">Чикаго (UTC-6:00)</option>
+                    <option value="Нью-Йорк (UTC-5:00)">Нью-Йорк (UTC-5:00)</option>
+                    <option value="Каракас (UTC-4:00)">Каракас (UTC-4:00)</option>
+                    <option value="Сантьяго (UTC-4:00)">Сантьяго (UTC-4:00)</option>
+                    <option value="Сент-Джонс (UTC-3:30)">Сент-Джонс (UTC-3:30)</option>
+                    <option value="Сан-Паулу (UTC-3:00)">Сан-Паулу (UTC-3:00)</option>
+                    <option value="Нуук (UTC-2:00)">Нуук (UTC-2:00)</option>
+                    <option value="Фернанду-ди-Норонья (UTC-2:00)">Фернанду-ди-Норонья (UTC-2:00)</option>
+                    <option value="Прая (UTC-1:00)">Прая (UTC-1:00)</option>
+                    <option value="Лондон (UTC+0:00)">Лондон (UTC+0:00)</option>
+                    <option value="Лиссабон (UTC+0:00)">Лиссабон (UTC+0:00)</option>
+                    <option value="Берлин (UTC+1:00)">Берлин (UTC+1:00)</option>
+                    <option value="Париж (UTC+1:00)">Париж (UTC+1:00)</option>
+                    <option value="Мадрид (UTC+1:00)">Мадрид (UTC+1:00)</option>
+                    <option value="Рим (UTC+1:00)">Рим (UTC+1:00)</option>
+                    <option value="Москва (UTC+3:00)">Москва (UTC+3:00)</option>
+                    <option value="Стамбул (UTC+3:00)">Стамбул (UTC+3:00)</option>
+                    <option value="Дубай (UTC+4:00)">Дубай (UTC+4:00)</option>
+                    <option value="Мумбаи (UTC+5:30)">Мумбаи (UTC+5:30)</option>
+                    <option value="Дели (UTC+5:30)">Дели (UTC+5:30)</option>
+                    <option value="Катманду (UTC+5:45)">Катманду (UTC+5:45)</option>
+                    <option value="Дакка (UTC+6:00)">Дакка (UTC+6:00)</option>
+                    <option value="Янгон (UTC+6:30)">Янгон (UTC+6:30)</option>
+                    <option value="Бангкок (UTC+7:00)">Бангкок (UTC+7:00)</option>
+                    <option value="Джакарта (UTC+7:00)">Джакарта (UTC+7:00)</option>
+                    <option value="Пекин (UTC+8:00)">Пекин (UTC+8:00)</option>
+                    <option value="Гонконг (UTC+8:00)">Гонконг (UTC+8:00)</option>
+                    <option value="Сингапур (UTC+8:00)">Сингапур (UTC+8:00)</option>
+                    <option value="Токио (UTC+9:00)">Токио (UTC+9:00)</option>
+                    <option value="Сеул (UTC+9:00)">Сеул (UTC+9:00)</option>
+                    <option value="Аделаида (UTC+9:30)">Аделаида (UTC+9:30)</option>
+                    <option value="Сидней (UTC+10:00)">Сидней (UTC+10:00)</option>
+                    <option value="Лорд-Хау (UTC+10:30)">Лорд-Хау (UTC+10:30)</option>
+                    <option value="Владивосток (UTC+10:00)">Владивосток (UTC+10:00)</option>
+                    <option value="Магадан (UTC+11:00)">Магадан (UTC+11:00)</option>
+                    <option value="Нумеа (UTC+11:00)">Нумеа (UTC+11:00)</option>
+                    <option value="Окленд (UTC+12:00)">Окленд (UTC+12:00)</option>
+                    <option value="Чатем (UTC+12:45)">Чатем (UTC+12:45)</option>
+                    <option value="Апиа (UTC+13:00)">Апиа (UTC+13:00)</option>
+                    <option value="Киртитайм (UTC+14:00)">Киртитайм (UTC+14:00)</option>
+                </select>
             </div>
-
-            <button type="button" class="submit-btn" onclick="submitForm()">Создать событие</button>
-        </form>
+            <div class="question">
+                <label id="labelLocation">11. Место проведения</label>
+                <input type="text" id="location" placeholder="Введите место">
+            </div>
+            <div class="question">
+                <label id="labelComment">12. Комментарий</label>
+                <textarea id="comment" placeholder="Любые дополнительные сведения"></textarea>
+            </div>
+            <div class="question">
+                <label id="labelParticipantLimit">13. Ограничение участников</label>
+                <select id="participantLimitType" onchange="toggleParticipantLimit()">
+                    <option value="Нет ограничения">Нет ограничения</option>
+                    <option value="Ограничение">Ограничение</option>
+                </select>
+                <input type="number" id="participantLimit" class="hidden" min="1" placeholder="Введите число">
+            </div>
+            <div class="question hidden" id="reserveQuestion">
+                <label id="labelReserve">14. Вносить в резерв при превышении?</label>
+                <select id="reserve">
+                    <option value="Да">Да</option>
+                    <option value="Нет">Нет</option>
+                </select>
+            </div>
+            <div class="question">
+                <label id="labelPaymentType">15. Мероприятие бесплатное/платное</label>
+                <select id="paymentType" onchange="togglePaymentOptions()">
+                    <option value="Бесплатное">Бесплатное</option>
+                    <option value="Платное">Платное</option>
+                </select>
+            </div>
+            <div class="question hidden" id="paymentDetails">
+                <label id="labelPaymentMethod">16. Тип оплаты</label>
+                <select id="paymentMethod">
+                    <option value="Предоплата">Предоплата</option>
+                    <option value="Постоплата">Постоплата</option>
+                </select>
+            </div>
+            <div class="question hidden" id="costDetails">
+                <label id="labelCost">17. Стоимость</label>
+                <select id="costType" onchange="toggleCostOptions()">
+                    <option value="Постоянная">Постоянная</option>
+                    <option value="Делится поровну">Делится поровну</option>
+                </select>
+                <input type="number" id="fixedCost" class="hidden" min="0" placeholder="Введите сумму">
+            </div>
+        </div>
+        <button id="submitBtn">Отправить ответы</button>
     </div>
-    <script src="app.js"></script>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+
+        const translations = {
+            ru: {
+                pageTitle: "Опросник для мероприятия",
+                formTitle: "Опросник для мероприятия",
+                labelLanguage: "1. Выбор языка",
+                labelEventName: "2. Название события",
+                labelFrequency: "3. Периодичность встреч",
+                frequencyOptions: ["Разовая", "Регулярная"],
+                labelRegularFrequency: "4. Периодичность регулярных встреч",
+                regularFrequencyOptions: ["Годовая", "Ежемесячная", "Еженедельная"],
+                labelOneTimeDate: "5. Дата начала (для разовой встречи)",
+                labelYearlyDates: "5. Выберите даты для годовых встреч",
+                labelMonthlyDayNumber: "5. Выберите число месяца для ежемесячных встреч",
+                labelWeeklyDays: "5. Выберите дни недели для еженедельных встреч",
+                weeklyDays: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"],
+                labelStartTime: "6. Время начала встречи",
+                labelDuration: "7. Продолжительность",
+                durationUnits: ["Минуты", "Часы", "Дни"],
+                labelPollStart: "8. Начинать опрос участников до начала за",
+                pollStartUnits: ["Минуты", "Часы", "Дни"],
+                labelPollEnd: "9. Заканчивать опрос до окончания за",
+                pollEndUnits: ["Минуты", "Часы", "Дни"],
+                labelCityTimezone: "10. Город и часовой пояс",
+                cityTimezoneOptions: [
+                    "Бейкер-Айленд (UTC-12:00)",
+                    "Паго-Паго (UTC-11:00)",
+                    "Гонолулу (UTC-10:00)",
+                    "Анкоридж (UTC-9:00)",
+                    "Лос-Анджелес (UTC-8:00)",
+                    "Денвер (UTC-7:00)",
+                    "Чикаго (UTC-6:00)",
+                    "Нью-Йорк (UTC-5:00)",
+                    "Каракас (UTC-4:00)",
+                    "Сантьяго (UTC-4:00)",
+                    "Сент-Джонс (UTC-3:30)",
+                    "Сан-Паулу (UTC-3:00)",
+                    "Нуук (UTC-2:00)",
+                    "Фернанду-ди-Норонья (UTC-2:00)",
+                    "Прая (UTC-1:00)",
+                    "Лондон (UTC+0:00)",
+                    "Лиссабон (UTC+0:00)",
+                    "Берлин (UTC+1:00)",
+                    "Париж (UTC+1:00)",
+                    "Мадрид (UTC+1:00)",
+                    "Рим (UTC+1:00)",
+                    "Москва (UTC+3:00)",
+                    "Стамбул (UTC+3:00)",
+                    "Дубай (UTC+4:00)",
+                    "Мумбаи (UTC+5:30)",
+                    "Дели (UTC+5:30)",
+                    "Катманду (UTC+5:45)",
+                    "Дакка (UTC+6:00)",
+                    "Янгон (UTC+6:30)",
+                    "Бангкок (UTC+7:00)",
+                    "Джакарта (UTC+7:00)",
+                    "Пекин (UTC+8:00)",
+                    "Гонконг (UTC+8:00)",
+                    "Сингапур (UTC+8:00)",
+                    "Токио (UTC+9:00)",
+                    "Сеул (UTC+9:00)",
+                    "Аделаида (UTC+9:30)",
+                    "Сидней (UTC+10:00)",
+                    "Лорд-Хау (UTC+10:30)",
+                    "Владивосток (UTC+10:00)",
+                    "Магадан (UTC+11:00)",
+                    "Нумеа (UTC+11:00)",
+                    "Окленд (UTC+12:00)",
+                    "Чатем (UTC+12:45)",
+                    "Апиа (UTC+13:00)",
+                    "Киртитайм (UTC+14:00)"
+                ],
+                labelLocation: "11. Место проведения",
+                labelComment: "12. Комментарий",
+                labelParticipantLimit: "13. Ограничение участников",
+                participantLimitOptions: ["Нет ограничения", "Ограничение"],
+                labelReserve: "14. Вносить в резерв при превышении?",
+                reserveOptions: ["Да", "Нет"],
+                labelPaymentType: "15. Мероприятие бесплатное/платное",
+                paymentTypeOptions: ["Бесплатное", "Платное"],
+                labelPaymentMethod: "16. Тип оплаты",
+                paymentMethodOptions: ["Предоплата", "Постоплата"],
+                labelCost: "17. Стоимость",
+                costTypeOptions: ["Постоянная", "Делится поровну"],
+                placeholderEventName: "Введите название",
+                placeholderDayNumber: "Например, 15",
+                placeholderDuration: "Введите число",
+                placeholderPollStart: "Введите число",
+                placeholderPollEnd: "Введите число",
+                placeholderLocation: "Введите место",
+                placeholderComment: "Любые дополнительные сведения",
+                placeholderParticipantLimit: "Введите число",
+                placeholderFixedCost: "Введите сумму",
+                submitButton: "Отправить ответы",
+                alertMessage: "Спасибо! Данные отправлены.",
+                messageHeader: "Результаты опроса:",
+                messageEventName: "Название",
+                messageFrequency: "Периодичность",
+                messageRegularFrequency: "Тип регулярности",
+                messageYearlyDates: "Даты",
+                messageMonthlyDayNumber: "Число",
+                messageWeeklyDays: "Дни",
+                messageOneTimeDate: "Дата",
+                messageStartTime: "Время начала",
+                messageDuration: "Продолжительность",
+                messagePollStart: "Начать опрос за",
+                messagePollEnd: "Закончить опрос за",
+                messageCityTimezone: "Город и часовой пояс",
+                messageLocation: "Место",
+                messageComment: "Комментарий",
+                messageParticipantLimit: "Ограничение участников",
+                messageReserve: "Резерв",
+                messagePaymentType: "Тип оплаты",
+                messagePaymentMethod: "Метод оплаты",
+                messageCost: "Стоимость",
+                notSpecified: "Не указано",
+                notSelected: "Не выбрано"
+            },
+            en: {
+                pageTitle: "Event Questionnaire",
+                formTitle: "Event Questionnaire",
+                labelLanguage: "1. Select Language",
+                labelEventName: "2. Event Name",
+                labelFrequency: "3. Meeting Frequency",
+                frequencyOptions: ["One-time", "Regular"],
+                labelRegularFrequency: "4. Regular Meeting Frequency",
+                regularFrequencyOptions: ["Yearly", "Monthly", "Weekly"],
+                labelOneTimeDate: "5. Start Date (for one-time meeting)",
+                labelYearlyDates: "5. Select Dates for Yearly Meetings",
+                labelMonthlyDayNumber: "5. Select Day of the Month for Monthly Meetings",
+                labelWeeklyDays: "5. Select Days of the Week for Weekly Meetings",
+                weeklyDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                labelStartTime: "6. Meeting Start Time",
+                labelDuration: "7. Duration",
+                durationUnits: ["Minutes", "Hours", "Days"],
+                labelPollStart: "8. Start Participant Poll Before",
+                pollStartUnits: ["Minutes", "Hours", "Days"],
+                labelPollEnd: "9. End Poll Before",
+                pollEndUnits: ["Minutes", "Hours", "Days"],
+                labelCityTimezone: "10. City and Time Zone",
+                cityTimezoneOptions: [
+                    "Baker Island (UTC-12:00)",
+                    "Pago Pago (UTC-11:00)",
+                    "Honolulu (UTC-10:00)",
+                    "Anchorage (UTC-9:00)",
+                    "Los Angeles (UTC-8:00)",
+                    "Denver (UTC-7:00)",
+                    "Chicago (UTC-6:00)",
+                    "New York (UTC-5:00)",
+                    "Caracas (UTC-4:00)",
+                    "Santiago (UTC-4:00)",
+                    "St. John's (UTC-3:30)",
+                    "São Paulo (UTC-3:00)",
+                    "Nuuk (UTC-2:00)",
+                    "Fernando de Noronha (UTC-2:00)",
+                    "Praia (UTC-1:00)",
+                    "London (UTC+0:00)",
+                    "Lisbon (UTC+0:00)",
+                    "Berlin (UTC+1:00)",
+                    "Paris (UTC+1:00)",
+                    "Madrid (UTC+1:00)",
+                    "Rome (UTC+1:00)",
+                    "Moscow (UTC+3:00)",
+                    "Istanbul (UTC+3:00)",
+                    "Dubai (UTC+4:00)",
+                    "Mumbai (UTC+5:30)",
+                    "Delhi (UTC+5:30)",
+                    "Kathmandu (UTC+5:45)",
+                    "Dhaka (UTC+6:00)",
+                    "Yangon (UTC+6:30)",
+                    "Bangkok (UTC+7:00)",
+                    "Jakarta (UTC+7:00)",
+                    "Beijing (UTC+8:00)",
+                    "Hong Kong (UTC+8:00)",
+                    "Singapore (UTC+8:00)",
+                    "Tokyo (UTC+9:00)",
+                    "Seoul (UTC+9:00)",
+                    "Adelaide (UTC+9:30)",
+                    "Sydney (UTC+10:00)",
+                    "Lord Howe (UTC+10:30)",
+                    "Vladivostok (UTC+10:00)",
+                    "Magadan (UTC+11:00)",
+                    "Nouméa (UTC+11:00)",
+                    "Auckland (UTC+12:00)",
+                    "Chatham (UTC+12:45)",
+                    "Apia (UTC+13:00)",
+                    "Kiritimati (UTC+14:00)"
+                ],
+                labelLocation: "11. Location",
+                labelComment: "12. Comment",
+                labelParticipantLimit: "13. Participant Limit",
+                participantLimitOptions: ["No Limit", "Limit"],
+                labelReserve: "14. Add to Reserve if Exceeded?",
+                reserveOptions: ["Yes", "No"],
+                labelPaymentType: "15. Event Free/Paid",
+                paymentTypeOptions: ["Free", "Paid"],
+                labelPaymentMethod: "16. Payment Type",
+                paymentMethodOptions: ["Prepayment", "Postpayment"],
+                labelCost: "17. Cost",
+                costTypeOptions: ["Fixed", "Split Equally"],
+                placeholderEventName: "Enter name",
+                placeholderDayNumber: "E.g., 15",
+                placeholderDuration: "Enter number",
+                placeholderPollStart: "Enter number",
+                placeholderPollEnd: "Enter number",
+                placeholderLocation: "Enter location",
+                placeholderComment: "Any additional information",
+                placeholderParticipantLimit: "Enter number",
+                placeholderFixedCost: "Enter amount",
+                submitButton: "Submit Answers",
+                alertMessage: "Thank you! Data submitted.",
+                messageHeader: "Survey Results:",
+                messageEventName: "Name",
+                messageFrequency: "Frequency",
+                messageRegularFrequency: "Regular Frequency",
+                messageYearlyDates: "Dates",
+                messageMonthlyDayNumber: "Day",
+                messageWeeklyDays: "Days",
+                messageOneTimeDate: "Date",
+                messageStartTime: "Start Time",
+                messageDuration: "Duration",
+                messagePollStart: "Start Poll Before",
+                messagePollEnd: "End Poll Before",
+                messageCityTimezone: "City and Time Zone",
+                messageLocation: "Location",
+                messageComment: "Comment",
+                messageParticipantLimit: "Participant Limit",
+                messageReserve: "Reserve",
+                messagePaymentType: "Payment Type",
+                messagePaymentMethod: "Payment Method",
+                messageCost: "Cost",
+                notSpecified: "Not specified",
+                notSelected: "Not selected"
+            },
+            es: {
+                pageTitle: "Cuestionario de Eventos",
+                formTitle: "Cuestionario de Eventos",
+                labelLanguage: "1. Seleccionar Idioma",
+                labelEventName: "2. Nombre del Evento",
+                labelFrequency: "3. Frecuencia de las Reuniones",
+                frequencyOptions: ["Única", "Regular"],
+                labelRegularFrequency: "4. Frecuencia de las Reuniones Regulares",
+                regularFrequencyOptions: ["Anual", "Mensual", "Semanal"],
+                labelOneTimeDate: "5. Fecha de Inicio (para reunión única)",
+                labelYearlyDates: "5. Seleccione Fechas para Reuniones Anuales",
+                labelMonthlyDayNumber: "5. Seleccione Día del Mes para Reuniones Mensuales",
+                labelWeeklyDays: "5. Seleccione Días de la Semana para Reuniones Semanales",
+                weeklyDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
+                labelStartTime: "6. Hora de Inicio de la Reunión",
+                labelDuration: "7. Duración",
+                durationUnits: ["Minutos", "Horas", "Días"],
+                labelPollStart: "8. Iniciar Encuesta de Participantes Antes",
+                pollStartUnits: ["Minutos", "Horas", "Días"],
+                labelPollEnd: "9. Finalizar Encuesta Antes",
+                pollEndUnits: ["Minutos", "Horas", "Días"],
+                labelCityTimezone: "10. Ciudad y Zona Horaria",
+                cityTimezoneOptions: [
+                    "Isla Baker (UTC-12:00)",
+                    "Pago Pago (UTC-11:00)",
+                    "Honolulú (UTC-10:00)",
+                    "Anchorage (UTC-9:00)",
+                    "Los Ángeles (UTC-8:00)",
+                    "Denver (UTC-7:00)",
+                    "Chicago (UTC-6:00)",
+                    "Nueva York (UTC-5:00)",
+                    "Caracas (UTC-4:00)",
+                    "Santiago (UTC-4:00)",
+                    "San Juan (UTC-3:30)",
+                    "São Paulo (UTC-3:00)",
+                    "Nuuk (UTC-2:00)",
+                    "Fernando de Noronha (UTC-2:00)",
+                    "Praia (UTC-1:00)",
+                    "Londres (UTC+0:00)",
+                    "Lisboa (UTC+0:00)",
+                    "Berlín (UTC+1:00)",
+                    "París (UTC+1:00)",
+                    "Madrid (UTC+1:00)",
+                    "Roma (UTC+1:00)",
+                    "Moscú (UTC+3:00)",
+                    "Estambul (UTC+3:00)",
+                    "Dubái (UTC+4:00)",
+                    "Bombay (UTC+5:30)",
+                    "Delhi (UTC+5:30)",
+                    "Katmandú (UTC+5:45)",
+                    "Daca (UTC+6:00)",
+                    "Yangon (UTC+6:30)",
+                    "Bangkok (UTC+7:00)",
+                    "Yakarta (UTC+7:00)",
+                    "Pekín (UTC+8:00)",
+                    "Hong Kong (UTC+8:00)",
+                    "Singapur (UTC+8:00)",
+                    "Tokio (UTC+9:00)",
+                    "Seúl (UTC+9:00)",
+                    "Adelaida (UTC+9:30)",
+                    "Sídney (UTC+10:00)",
+                    "Lord Howe (UTC+10:30)",
+                    "Vladivostok (UTC+10:00)",
+                    "Magadán (UTC+11:00)",
+                    "Numea (UTC+11:00)",
+                    "Auckland (UTC+12:00)",
+                    "Chatham (UTC+12:45)",
+                    "Apia (UTC+13:00)",
+                    "Kiritimati (UTC+14:00)"
+                ],
+                labelLocation: "11. Ubicación",
+                labelComment: "12. Comentario",
+                labelParticipantLimit: "13. Límite de Participantes",
+                participantLimitOptions: ["Sin Límite", "Límite"],
+                labelReserve: "14. ¿Añadir a la Reserva si se Excede?",
+                reserveOptions: ["Sí", "No"],
+                labelPaymentType: "15. Evento Gratuito/Pago",
+                paymentTypeOptions: ["Gratuito", "De Pago"],
+                labelPaymentMethod: "16. Tipo de Pago",
+                paymentMethodOptions: ["Prepago", "Postpago"],
+                labelCost: "17. Costo",
+                costTypeOptions: ["Fijo", "Dividido Igualmente"],
+                placeholderEventName: "Ingrese el nombre",
+                placeholderDayNumber: "Por ejemplo, 15",
+                placeholderDuration: "Ingrese un número",
+                placeholderPollStart: "Ingrese un número",
+                placeholderPollEnd: "Ingrese un número",
+                placeholderLocation: "Ingrese la ubicación",
+                placeholderComment: "Cualquier información adicional",
+                placeholderParticipantLimit: "Ingrese un número",
+                placeholderFixedCost: "Ingrese el monto",
+                submitButton: "Enviar Respuestas",
+                alertMessage: "¡Gracias! Datos enviados.",
+                messageHeader: "Resultados de la Encuesta:",
+                messageEventName: "Nombre",
+                messageFrequency: "Frecuencia",
+                messageRegularFrequency: "Frecuencia Regular",
+                messageYearlyDates: "Fechas",
+                messageMonthlyDayNumber: "Día",
+                messageWeeklyDays: "Días",
+                messageOneTimeDate: "Fecha",
+                messageStartTime: "Hora de Inicio",
+                messageDuration: "Duración",
+                messagePollStart: "Iniciar Encuesta Antes",
+                messagePollEnd: "Finalizar Encuesta Antes",
+                messageCityTimezone: "Ciudad y Zona Horaria",
+                messageLocation: "Ubicación",
+                messageComment: "Comentario",
+                messageParticipantLimit: "Límite de Participantes",
+                messageReserve: "Reserva",
+                messagePaymentType: "Tipo de Pago",
+                messagePaymentMethod: "Método de Pago",
+                messageCost: "Costo",
+                notSpecified: "No especificado",
+                notSelected: "No seleccionado"
+            }
+        };
+
+        // Простой календарь для годовых встреч
+        function generateYearlyCalendar() {
+            const lang = document.getElementById('language').value;
+            const calendar = document.getElementById('yearlyCalendar');
+            calendar.innerHTML = '';
+            const today = new Date();
+            const year = today.getFullYear();
+            for (let month = 0; month < 12; month++) {
+                const monthName = new Date(year, month, 1).toLocaleString(lang === 'ru' ? 'ru' : lang === 'en' ? 'en' : 'es', { month: 'long' });
+                const monthDiv = document.createElement('div');
+                monthDiv.textContent = monthName;
+                monthDiv.style.gridColumn = 'span 7';
+                monthDiv.style.fontWeight = 'bold';
+                calendar.appendChild(monthDiv);
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.textContent = day;
+                    dayDiv.dataset.date = `${year}-${month + 1}-${day}`;
+                    dayDiv.addEventListener('click', () => {
+                        dayDiv.classList.toggle('selected');
+                    });
+                    calendar.appendChild(dayDiv);
+                }
+            }
+        }
+
+        // Обновление языка интерфейса
+        function updateLanguage() {
+            const lang = document.getElementById('language').value;
+            const t = translations[lang];
+
+            // Обновление заголовков и меток
+            document.getElementById('pageTitle').textContent = t.pageTitle;
+            document.getElementById('formTitle').textContent = t.formTitle;
+            document.getElementById('labelLanguage').textContent = t.labelLanguage;
+            document.getElementById('labelEventName').textContent = t.labelEventName;
+            document.getElementById('labelFrequency').textContent = t.labelFrequency;
+            document.getElementById('labelRegularFrequency').textContent = t.labelRegularFrequency;
+            document.getElementById('labelOneTimeDate').textContent = t.labelOneTimeDate;
+            document.getElementById('labelYearlyDates').textContent = t.labelYearlyDates;
+            document.getElementById('labelMonthlyDayNumber').textContent = t.labelMonthlyDayNumber;
+            document.getElementById('labelWeeklyDays').textContent = t.labelWeeklyDays;
+            document.getElementById('labelStartTime').textContent = t.labelStartTime;
+            document.getElementById('labelDuration').textContent = t.labelDuration;
+            document.getElementById('labelPollStart').textContent = t.labelPollStart;
+            document.getElementById('labelPollEnd').textContent = t.labelPollEnd;
+            document.getElementById('labelCityTimezone').textContent = t.labelCityTimezone;
+            document.getElementById('labelLocation').textContent = t.labelLocation;
+            document.getElementById('labelComment').textContent = t.labelComment;
+            document.getElementById('labelParticipantLimit').textContent = t.labelParticipantLimit;
+            document.getElementById('labelReserve').textContent = t.labelReserve;
+            document.getElementById('labelPaymentType').textContent = t.labelPaymentType;
+            document.getElementById('labelPaymentMethod').textContent = t.labelPaymentMethod;
+            document.getElementById('labelCost').textContent = t.labelCost;
+
+            // Обновление placeholder'ов
+            document.getElementById('eventName').placeholder = t.placeholderEventName;
+            document.getElementById('dayNumber').placeholder = t.placeholderDayNumber;
+            document.getElementById('durationValue').placeholder = t.placeholderDuration;
+            document.getElementById('pollStartValue').placeholder = t.placeholderPollStart;
+            document.getElementById('pollEndValue').placeholder = t.placeholderPollEnd;
+            document.getElementById('location').placeholder = t.placeholderLocation;
+            document.getElementById('comment').placeholder = t.placeholderComment;
+            document.getElementById('participantLimit').placeholder = t.placeholderParticipantLimit;
+            document.getElementById('fixedCost').placeholder = t.placeholderFixedCost;
+
+            // Обновление опций выпадающих списков
+            const frequency = document.getElementById('frequency');
+            const frequencyValue = frequency.value;
+            frequency.innerHTML = t.frequencyOptions.map((opt, i) => `<option value="${translations.ru.frequencyOptions[i]}"${opt === frequencyValue ? ' selected' : ''}>${opt}</option>`).join('');
+            
+            const regularFrequency = document.getElementById('regularFrequency');
+            const regularFrequencyValue = regularFrequency.value;
+            regularFrequency.innerHTML = t.regularFrequencyOptions.map((opt, i) => `<option value="${translations.ru.regularFrequencyOptions[i]}"${opt === regularFrequencyValue ? ' selected' : ''}>${opt}</option>`).join('');
+            
+            const durationUnit = document.getElementById('durationUnit');
+            const durationUnitValue = durationUnit.value;
+            durationUnit.innerHTML = t.durationUnits.map((opt, i) => `<option value="${translations.ru.durationUnits[i]}"${opt === durationUnitValue ? ' selected' : ''}>${opt}</option>`).join('');
+            
+            const pollStartUnit = document.getElementById('pollStartUnit');
+            const pollStartUnitValue = pollStartUnit.value;
+            pollStartUnit.innerHTML = t.pollStartUnits.map((opt, i) => `<option value="${translations.ru.pollStartUnits[i]}"${opt === pollStartUnitValue ? ' selected' : ''}>${opt}</option>`).join('');
+            
+            const pollEndUnit = document.getElementById('pollEndUnit');
+            const pollEndUnitValue = pollEndUnit.value;
+            pollEndUnit.innerHTML = t.pollEndUnits.map((opt, i) => `<option value="${translations.ru.pollEndUnits[i]}"${opt === pollEndUnitValue ? ' selected' : ''}>${opt}</option>`).join('');
+            
+            const cityTimezone = document.getElementById('cityTimezone');
+            const cityTimezoneValue = cityTimezone.value;
+            cityTimezone.innerHTML = t.cityTimezoneOptions.map((opt, i) => `<option value="${translations.ru.cityTimezoneOptions[i]}"${opt === cityTimezoneValue ? ' selected' : ''}>${opt}</option>`).join('');
+            
+            const participantLimitType = document.getElementById('participantLimitType');
+            const participantLimitTypeValue = participantLimitType.value;
+            participantLimitType.innerHTML = t.participantLimitOptions.map((opt, i) => `<option value="${translations.ru.participantLimitOptions[i]}"${opt === participantLimitTypeValue ? ' selected' : ''}>${opt}</option>`).join('');
+            
+            const reserve = document.getElementById('reserve');
+            const reserveValue = reserve.value;
+            reserve.innerHTML = t.reserveOptions.map((opt, i) => `<option value="${translations.ru.reserveOptions[i]}"${opt === reserveValue ? ' selected' : ''}>${opt}</option>`).join('');
+            
+            const paymentType = document.getElementById('paymentType');
+            const paymentTypeValue = paymentType.value;
+            paymentType.innerHTML = t.paymentTypeOptions.map((opt, i) => `<option value="${translations.ru.paymentTypeOptions[i]}"${opt === paymentTypeValue ? ' selected' : ''}>${opt}</option>`).join('');
+            
+            const paymentMethod = document.getElementById('paymentMethod');
+            const paymentMethodValue = paymentMethod.value;
+            paymentMethod.innerHTML = t.paymentMethodOptions.map((opt, i) => `<option value="${translations.ru.paymentMethodOptions[i]}"${opt === paymentMethodValue ? ' selected' : ''}>${opt}</option>`).join('');
+            
+            const costType = document.getElementById('costType');
+            const costTypeValue = costType.value;
+            costType.innerHTML = t.costTypeOptions.map((opt, i) => `<option value="${translations.ru.costTypeOptions[i]}"${opt === costTypeValue ? ' selected' : ''}>${opt}</option>`).join('');
+
+            // Обновление календаря дней недели
+            const weeklyDays = document.querySelectorAll('#weeklyDaysCalendar div');
+            weeklyDays.forEach((day, index) => {
+                day.textContent = t.weeklyDays[index];
+                day.dataset.day = translations.ru.weeklyDays[index];
+            });
+
+            // Обновление годового календаря, если он виден
+            if (!document.getElementById('yearlyDates').classList.contains('hidden')) {
+                generateYearlyCalendar();
+            }
+
+            // Обновление текста кнопки
+            document.getElementById('submitBtn').textContent = t.submitButton;
+        }
+
+        // Переключение опций периодичности
+        function toggleFrequencyOptions() {
+            const frequency = document.getElementById('frequency').value;
+            document.getElementById('regularOptions').classList.toggle('hidden', frequency !== translations.ru.frequencyOptions[1]);
+            document.getElementById('oneTimeDate').classList.toggle('hidden', frequency !== translations.ru.frequencyOptions[0]);
+            document.getElementById('yearlyDates').classList.add('hidden');
+            document.getElementById('weeklyDays').classList.add('hidden');
+            if (frequency === translations.ru.frequencyOptions[1]) toggleRegularOptions();
+        }
+
+        // Переключение опций регулярных встреч
+        function toggleRegularOptions() {
+            const regularFrequency = document.getElementById('regularFrequency').value;
+            document.getElementById('yearlyDates').classList.toggle('hidden', regularFrequency !== translations.ru.regularFrequencyOptions[0]);
+            document.getElementById('monthlyDayNumber').classList.toggle('hidden', regularFrequency !== translations.ru.regularFrequencyOptions[1]);
+            document.getElementById('weeklyDays').classList.toggle('hidden', regularFrequency !== translations.ru.regularFrequencyOptions[2]);
+            if (regularFrequency === translations.ru.regularFrequencyOptions[0]) generateYearlyCalendar();
+        }
+
+        // Переключение ограничения участников и резерва
+        function toggleParticipantLimit() {
+            const limitType = document.getElementById('participantLimitType').value;
+            document.getElementById('participantLimit').classList.toggle('hidden', limitType !== translations.ru.participantLimitOptions[1]);
+            document.getElementById('reserveQuestion').classList.toggle('hidden', limitType !== translations.ru.participantLimitOptions[1]);
+        }
+
+        // Переключение опций оплаты
+        function togglePaymentOptions() {
+            const paymentType = document.getElementById('paymentType').value;
+            document.getElementById('paymentDetails').classList.toggle('hidden', paymentType !== translations.ru.paymentTypeOptions[1]);
+            document.getElementById('costDetails').classList.toggle('hidden', paymentType !== translations.ru.paymentTypeOptions[1]);
+            toggleCostOptions();
+        }
+
+        // Переключение опций стоимости
+        function toggleCostOptions() {
+            const costType = document.getElementById('costType')?.value;
+            document.getElementById('fixedCost').classList.toggle('hidden', costType !== translations.ru.costTypeOptions[0]);
+        }
+
+        // Обработка кликов по дням недели
+        document.querySelectorAll('#weeklyDaysCalendar div').forEach(day => {
+            day.addEventListener('click', () => {
+                day.classList.toggle('selected');
+            });
+        });
+
+        // Отправка данных
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            const lang = document.getElementById('language').value;
+            const t = translations[lang];
+            const answers = {
+                language: lang,
+                eventName: document.getElementById('eventName').value || t.notSpecified,
+                frequency: document.getElementById('frequency').value,
+                regularFrequency: document.getElementById('regularFrequency')?.value || '',
+                startDate: document.getElementById('startDate')?.value || '',
+                yearlyDates: Array.from(document.querySelectorAll('#yearlyCalendar .selected')).map(div => div.dataset.date),
+                dayNumber: document.getElementById('dayNumber')?.value || '',
+                weeklyDays: Array.from(document.querySelectorAll('#weeklyDaysCalendar .selected')).map(div => div.dataset.day),
+                startTime: document.getElementById('startTime').value || t.notSpecified,
+                duration: {
+                    value: document.getElementById('durationValue').value || t.notSpecified,
+                    unit: document.getElementById('durationUnit').value
+                },
+                pollStart: {
+                    value: document.getElementById('pollStartValue').value || t.notSpecified,
+                    unit: document.getElementById('pollStartUnit').value
+                },
+                pollEnd: {
+                    value: document.getElementById('pollEndValue').value || t.notSpecified,
+                    unit: document.getElementById('pollEndUnit').value
+                },
+                cityTimezone: document.getElementById('cityTimezone').value || t.notSpecified,
+                location: document.getElementById('location').value || t.notSpecified,
+                comment: document.getElementById('comment').value || t.notSpecified,
+                participantLimitType: document.getElementById('participantLimitType').value,
+                participantLimit: document.getElementById('participantLimit')?.value || '',
+                reserve: document.getElementById('reserve')?.value || t.notSpecified,
+                paymentType: document.getElementById('paymentType').value,
+                paymentMethod: document.getElementById('paymentMethod')?.value || '',
+                costType: document.getElementById('costType')?.value || '',
+                fixedCost: document.getElementById('fixedCost')?.value || ''
+            };
+
+            const message = `
+${t.messageHeader}
+1. ${t.messageEventName}: ${answers.eventName}
+2. ${t.messageFrequency}: ${t.frequencyOptions[translations.ru.frequencyOptions.indexOf(answers.frequency)]}
+${answers.frequency === translations.ru.frequencyOptions[1] ? `3. ${t.messageRegularFrequency}: ${t.regularFrequencyOptions[translations.ru.regularFrequencyOptions.indexOf(answers.regularFrequency)]}` : ''}
+${answers.regularFrequency === translations.ru.regularFrequencyOptions[0] ? `4. ${t.messageYearlyDates}: ${answers.yearlyDates.join(', ') || t.notSelected}` : ''}
+${answers.regularFrequency === translations.ru.regularFrequencyOptions[1] ? `4. ${t.messageMonthlyDayNumber}: ${answers.dayNumber}` : ''}
+${answers.regularFrequency === translations.ru.regularFrequencyOptions[2] ? `4. ${t.messageWeeklyDays}: ${answers.weeklyDays.join(', ') || t.notSelected}` : ''}
+${answers.frequency === translations.ru.frequencyOptions[0] ? `4. ${t.messageOneTimeDate}: ${answers.startDate}` : ''}
+5. ${t.messageStartTime}: ${answers.startTime}
+6. ${t.messageDuration}: ${answers.duration.value} ${t.durationUnits[translations.ru.durationUnits.indexOf(answers.duration.unit)]}
+7. ${t.messagePollStart}: ${answers.pollStart.value} ${t.pollStartUnits[translations.ru.pollStartUnits.indexOf(answers.pollStart.unit)]}
+8. ${t.messagePollEnd}: ${answers.pollEnd.value} ${t.pollEndUnits[translations.ru.pollEndUnits.indexOf(answers.pollEnd.unit)]}
+9. ${t.messageCityTimezone}: ${t.cityTimezoneOptions[translations.ru.cityTimezoneOptions.indexOf(answers.cityTimezone)]}
+10. ${t.messageLocation}: ${answers.location}
+11. ${t.messageComment}: ${answers.comment}
+12. ${t.messageParticipantLimit}: ${t.participantLimitOptions[translations.ru.participantLimitOptions.indexOf(answers.participantLimitType)]}${answers.participantLimitType === translations.ru.participantLimitOptions[1] ? ` (${answers.participantLimit})` : ''}
+${answers.participantLimitType === translations.ru.participantLimitOptions[1] ? `13. ${t.messageReserve}: ${t.reserveOptions[translations.ru.reserveOptions.indexOf(answers.reserve)]}` : ''}
+14. ${t.messagePaymentType}: ${t.paymentTypeOptions[translations.ru.paymentTypeOptions.indexOf(answers.paymentType)]}
+${answers.paymentType === translations.ru.paymentTypeOptions[1] ? `15. ${t.messagePaymentMethod}: ${t.paymentMethodOptions[translations.ru.paymentMethodOptions.indexOf(answers.paymentMethod)]}` : ''}
+${answers.paymentType === translations.ru.paymentTypeOptions[1] ? `16. ${t.messageCost}: ${t.costTypeOptions[translations.ru.costTypeOptions.indexOf(answers.costType)]}${answers.costType === translations.ru.costTypeOptions[0] ? ` (${answers.fixedCost})` : ''}` : ''}
+            `;
+
+            tg.sendData(JSON.stringify(answers));
+            tg.showAlert(t.alertMessage);
+        });
+
+        tg.BackButton.onClick(() => {
+            tg.close();
+        });
+        tg.BackButton.show();
+
+        // Инициализация
+        updateLanguage();
+        toggleFrequencyOptions();
+        toggleParticipantLimit();
+        togglePaymentOptions();
+    </script>
 </body>
 </html>
