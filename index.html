@@ -70,17 +70,40 @@
         }
         .calendar {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
             gap: 5px;
             margin-top: 10px;
         }
-        .calendar div {
+        .weekly-days-calendar {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, auto);
+        }
+        .weekly-days-calendar div {
             padding: 5px;
             text-align: center;
             border: 1px solid #ccc;
             cursor: pointer;
         }
-        .calendar div.selected {
+        .weekly-days-calendar div.selected {
+            background-color: #0088cc;
+            color: white;
+        }
+        .day-monday { grid-row: 1; grid-column: 1; }
+        .day-tuesday { grid-row: 1; grid-column: 2; }
+        .day-wednesday { grid-row: 2; grid-column: 1; }
+        .day-thursday { grid-row: 2; grid-column: 2; }
+        .day-friday { grid-row: 3; grid-column: 1; }
+        .day-saturday { grid-row: 3; grid-column: 2; }
+        .day-sunday { grid-row: 4; grid-column: 1; }
+        .yearly-calendar {
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .yearly-calendar div {
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .yearly-calendar div.selected {
             background-color: #0088cc;
             color: white;
         }
@@ -123,7 +146,7 @@
             </div>
             <div class="question hidden" id="yearlyDates">
                 <label id="labelYearlyDates">5. Выберите даты для годовых встреч</label>
-                <div id="yearlyCalendar" class="calendar"></div>
+                <div id="yearlyCalendar" class="calendar yearly-calendar"></div>
             </div>
             <div class="question hidden" id="monthlyDayNumber">
                 <label id="labelMonthlyDayNumber">5. Выберите число месяца для ежемесячных встреч</label>
@@ -131,14 +154,14 @@
             </div>
             <div class="question hidden" id="weeklyDays">
                 <label id="labelWeeklyDays">5. Выберите дни недели для еженедельных встреч</label>
-                <div id="weeklyDaysCalendar" class="calendar">
-                    <div data-day="Понедельник">Понедельник</div>
-                    <div data-day="Вторник">Вторник</div>
-                    <div data-day="Среда">Среда</div>
-                    <div data-day="Четверг">Четверг</div>
-                    <div data-day="Пятница">Пятница</div>
-                    <div data-day="Суббота">Суббота</div>
-                    <div data-day="Воскресенье">Воскресенье</div>
+                <div id="weeklyDaysCalendar" class="calendar weekly-days-calendar">
+                    <div class="day-monday" data-day="Понедельник">Понедельник</div>
+                    <div class="day-tuesday" data-day="Вторник">Вторник</div>
+                    <div class="day-wednesday" data-day="Среда">Среда</div>
+                    <div class="day-thursday" data-day="Четверг">Четверг</div>
+                    <div class="day-friday" data-day="Пятница">Пятница</div>
+                    <div class="day-saturday" data-day="Суббота">Суббота</div>
+                    <div class="day-sunday" data-day="Воскресенье">Воскресенье</div>
                 </div>
             </div>
             <div class="question">
