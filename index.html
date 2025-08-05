@@ -905,6 +905,7 @@ ${answers.paymentType === translations.ru.paymentTypeOptions[1] ? `16. ${t.messa
                 body: JSON.stringify({ external_id, ...answers })
             }).then(response => response.json()).then(result => {
                 tg.showAlert(t.alertMessage);
+                tg.close();
                 console.log(result);
             }).catch(err => {
                 console.error('Ошибка отправки:', err);
