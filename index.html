@@ -899,7 +899,7 @@ ${answers.paymentType === translations.ru.paymentTypeOptions[1] ? `15. ${t.messa
 ${answers.paymentType === translations.ru.paymentTypeOptions[1] ? `16. ${t.messageCost}: ${t.costTypeOptions[translations.ru.costTypeOptions.indexOf(answers.costType)]}${answers.costType === translations.ru.costTypeOptions[0] ? ` (${answers.fixedCost})` : ''}` : ''}
             `;
 
-            fetch('http://185.121.12.17:3486/save-message', {
+            fetch('https://invite-event-sport.online:8443/save-message', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ external_id, ...answers })
