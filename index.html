@@ -902,7 +902,7 @@ ${answers.paymentType === translations.ru.paymentTypeOptions[1] ? `16. ${t.messa
             fetch('http://185.121.12.17:3486/save-message', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ external_id: external_id, ...answers })
+                body: JSON.stringify({ external_id, ...answers })
             }).then(response => response.json()).then(result => {
                 tg.showAlert(t.alertMessage);
                 console.log(result);
