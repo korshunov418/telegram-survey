@@ -299,10 +299,16 @@
             </div>
         </div>
         <button id="submitBtn">Отправить ответы </button>
+        <p>Параметр: <span id="param-display"></span></p>
     </div>
 
     <script>
-       
+         const urlParams = new URLSearchParams(window.location.search);
+         const paramValue = urlParams.get('chat_id'); // Пример для ?id=123
+  
+        // Вставляем значение в элемент с id="param-display"
+        document.getElementById('param-display').textContent = paramValue || 'Не указан';
+        
         const tg = window.Telegram.WebApp;
         tg.ready();
 
