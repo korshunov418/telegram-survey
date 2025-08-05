@@ -304,9 +304,6 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const paramValue = urlParams.get('chat_id'); // это связь через chatId
-
-        // Вставляем значение в элемент с id="param-display"
-        document.getElementById('param-display').textContent = paramValue || 'Не указан';
         
         const tg = window.Telegram.WebApp;
         tg.ready();
