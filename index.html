@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">Опросник для мероприятия</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uuid@9.0.1/dist/umd/uuidv4.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -298,16 +299,13 @@
                 <input type="number" id="fixedCost" class="hidden" min="0" placeholder="Введите сумму">
             </div>
         </div>
-        <button id="submitBtn">Отправить ответы </button>
-        <p>Параметр: <span id="param-display"></span></p>
+        <button id="submitBtn">Отправить ответы</button>
     </div>
 
     <script>
+
          const urlParams = new URLSearchParams(window.location.search);
-         const paramValue = urlParams.get('chat_id'); // Пример для ?id=123
-  
-        // Вставляем значение в элемент с id="param-display"
-        document.getElementById('param-display').textContent = paramValue || 'Не указан';
+         const external_id = urlParams.get('chat_id'); // Связь по external_id
         
         const tg = window.Telegram.WebApp;
         tg.ready();
@@ -406,6 +404,7 @@
                 placeholderFixedCost: "Введите сумму",
                 submitButton: "Отправить ответы",
                 alertMessage: "Спасибо! Данные отправлены.",
+                errorMessage: "Ошибка при отправке данных",
                 messageHeader: "Результаты опроса:",
                 messageEventName: "Название",
                 messageFrequency: "Периодичность",
@@ -522,6 +521,7 @@
                 placeholderFixedCost: "Enter amount",
                 submitButton: "Submit Answers",
                 alertMessage: "Thank you! Data submitted.",
+                errorMessage: "Error submitting data",
                 messageHeader: "Survey Results:",
                 messageEventName: "Name",
                 messageFrequency: "Frequency",
@@ -638,6 +638,7 @@
                 placeholderFixedCost: "Ingrese el monto",
                 submitButton: "Enviar Respuestas",
                 alertMessage: "¡Gracias! Datos enviados.",
+                errorMessage: "Error al enviar datos",
                 messageHeader: "Resultados de la Encuesta:",
                 messageEventName: "Nombre",
                 messageFrequency: "Frecuencia",
@@ -846,10 +847,10 @@
                 language: lang,
                 eventName: document.getElementById('eventName').value || t.notSpecified,
                 frequency: document.getElementById('frequency').value,
-                regularFrequency: document.getElementById('regularFrequency')?.value || '',
-                startDate: document.getElementById('startDate')?.value || '',
+                regularFrequency: document.getElementById('regularFrequency')?.value || t.notSpecified,
+                startDate: document.getElementById('startDate')?.value || t.notSpecified,
                 yearlyDates: Array.from(document.querySelectorAll('#yearlyCalendar .selected')).map(div => div.dataset.date),
-                dayNumber: document.getElementById('dayNumber')?.value || '',
+                dayNumber: document.getElementById('dayNumber')?.value || t.notSpecified,
                 weeklyDays: Array.from(document.querySelectorAll('#weeklyDaysCalendar .selected')).map(div => div.dataset.day),
                 startTime: document.getElementById('startTime').value || t.notSpecified,
                 duration: {
@@ -868,12 +869,12 @@
                 location: document.getElementById('location').value || t.notSpecified,
                 comment: document.getElementById('comment').value || t.notSpecified,
                 participantLimitType: document.getElementById('participantLimitType').value,
-                participantLimit: document.getElementById('participantLimit')?.value || '',
+                participantLimit: document.getElementById('participantLimit')?.value || t.notSpecified,
                 reserve: document.getElementById('reserve')?.value || t.notSpecified,
                 paymentType: document.getElementById('paymentType').value,
-                paymentMethod: document.getElementById('paymentMethod')?.value || '',
-                costType: document.getElementById('costType')?.value || '',
-                fixedCost: document.getElementById('fixedCost')?.value || ''
+                paymentMethod: document.getElementById('paymentMethod')?.value || t.notSpecified,
+                costType: document.getElementById('costType')?.value || t.notSpecified,
+                fixedCost: document.getElementById('fixedCost')?.value || t.notSpecified
             };
 
             const message = `
@@ -899,8 +900,17 @@ ${answers.paymentType === translations.ru.paymentTypeOptions[1] ? `15. ${t.messa
 ${answers.paymentType === translations.ru.paymentTypeOptions[1] ? `16. ${t.messageCost}: ${t.costTypeOptions[translations.ru.costTypeOptions.indexOf(answers.costType)]}${answers.costType === translations.ru.costTypeOptions[0] ? ` (${answers.fixedCost})` : ''}` : ''}
             `;
 
-            tg.sendData(JSON.stringify(answers));
-            tg.showAlert(t.alertMessage);
+            fetch('http://185.121.12.17:3486/save-message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ external_id: external_id, ...answers })
+            }).then(response => response.json()).then(result => {
+                tg.showAlert(t.alertMessage);
+                console.log(result);
+            }).catch(err => {
+                console.error('Ошибка отправки:', err);
+                tg.showAlert(t.errorMessage);
+            });
         });
 
         tg.BackButton.onClick(() => {
