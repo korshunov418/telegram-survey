@@ -128,16 +128,16 @@
             <div class="question">
                 <label id="labelFrequency">3. Периодичность встреч</label>
                 <select id="frequency" onchange="toggleFrequencyOptions()">
-                    <option value="Разовая">Разовая</option>
-                    <option value="Регулярная" selected>Регулярная</option>
+                    <option value="one_time">Разовая</option>
+                    <option value="regular" selected>Регулярная</option>
                 </select>
             </div>
             <div class="question hidden" id="regularOptions">
                 <label id="labelRegularFrequency">4. Периодичность регулярных встреч</label>
                 <select id="regularFrequency" onchange="toggleRegularOptions()">
-                    <option value="Годовая">Годовая</option>
-                    <option value="Ежемесячная">Ежемесячная</option>
-                    <option value="Еженедельная" selected>Еженедельная</option>
+                    <option value="yearly">Годовая</option>
+                    <option value="monthly">Ежемесячная</option>
+                    <option value="weekly" selected>Еженедельная</option>
                 </select>
             </div>
             <div class="question hidden" id="oneTimeDate">
@@ -155,13 +155,13 @@
             <div class="question hidden" id="weeklyDays">
                 <label id="labelWeeklyDays">5. Выберите дни недели для еженедельных встреч</label>
                 <div id="weeklyDaysCalendar" class="calendar weekly-days-calendar">
-                    <div class="day-monday" data-day="Понедельник">Понедельник</div>
-                    <div class="day-tuesday" data-day="Вторник">Вторник</div>
-                    <div class="day-wednesday" data-day="Среда">Среда</div>
-                    <div class="day-thursday" data-day="Четверг">Четверг</div>
-                    <div class="day-friday" data-day="Пятница">Пятница</div>
-                    <div class="day-saturday" data-day="Суббота">Суббота</div>
-                    <div class="day-sunday" data-day="Воскресенье">Воскресенье</div>
+                    <div class="day-monday" data-day="monday">Понедельник</div>
+                    <div class="day-tuesday" data-day="tuesday">Вторник</div>
+                    <div class="day-wednesday" data-day="wednesday">Среда</div>
+                    <div class="day-thursday" data-day="thursday">Четверг</div>
+                    <div class="day-friday" data-day="friday">Пятница</div>
+                    <div class="day-saturday" data-day="saturday">Суббота</div>
+                    <div class="day-sunday" data-day="sunday">Воскресенье</div>
                 </div>
             </div>
             <div class="question">
@@ -173,9 +173,9 @@
                 <div class="duration-container">
                     <input type="number" id="durationValue" min="1" placeholder="Введите число">
                     <select id="durationUnit">
-                        <option value="Минуты">Минуты</option>
-                        <option value="Часы">Часы</option>
-                        <option value="Дни">Дни</option>
+                        <option value="minutes">Минуты</option>
+                        <option value="hours">Часы</option>
+                        <option value="days">Дни</option>
                     </select>
                 </div>
             </div>
@@ -184,9 +184,9 @@
                 <div class="poll-start-container">
                     <input type="number" id="pollStartValue" min="1" placeholder="Введите число">
                     <select id="pollStartUnit">
-                        <option value="Минуты">Минуты</option>
-                        <option value="Часы">Часы</option>
-                        <option value="Дни">Дни</option>
+                        <option value="minutes">Минуты</option>
+                        <option value="hours">Часы</option>
+                        <option value="days">Дни</option>
                     </select>
                 </div>
             </div>
@@ -195,61 +195,61 @@
                 <div class="poll-end-container">
                     <input type="number" id="pollEndValue" min="1" placeholder="Введите число">
                     <select id="pollEndUnit">
-                        <option value="Минуты">Минуты</option>
-                        <option value="Часы">Часы</option>
-                        <option value="Дни">Дни</option>
+                        <option value="minutes">Минуты</option>
+                        <option value="hours">Часы</option>
+                        <option value="days">Дни</option>
                     </select>
                 </div>
             </div>
             <div class="question">
                 <label id="labelCityTimezone">10. Город и часовой пояс</label>
                 <select id="cityTimezone">
-                    <option value="Бейкер-Айленд (UTC-12:00)">Бейкер-Айленд (UTC-12:00)</option>
-                    <option value="Паго-Паго (UTC-11:00)">Паго-Паго (UTC-11:00)</option>
-                    <option value="Гонолулу (UTC-10:00)">Гонолулу (UTC-10:00)</option>
-                    <option value="Анкоридж (UTC-9:00)">Анкоридж (UTC-9:00)</option>
-                    <option value="Лос-Анджелес (UTC-8:00)">Лос-Анджелес (UTC-8:00)</option>
-                    <option value="Денвер (UTC-7:00)">Денвер (UTC-7:00)</option>
-                    <option value="Чикаго (UTC-6:00)">Чикаго (UTC-6:00)</option>
-                    <option value="Нью-Йорк (UTC-5:00)">Нью-Йорк (UTC-5:00)</option>
-                    <option value="Каракас (UTC-4:00)">Каракас (UTC-4:00)</option>
-                    <option value="Сантьяго (UTC-4:00)">Сантьяго (UTC-4:00)</option>
-                    <option value="Сент-Джонс (UTC-3:30)">Сент-Джонс (UTC-3:30)</option>
-                    <option value="Сан-Паулу (UTC-3:00)">Сан-Паулу (UTC-3:00)</option>
-                    <option value="Нуук (UTC-2:00)">Нуук (UTC-2:00)</option>
-                    <option value="Фернанду-ди-Норонья (UTC-2:00)">Фернанду-ди-Норонья (UTC-2:00)</option>
-                    <option value="Прая (UTC-1:00)">Прая (UTC-1:00)</option>
-                    <option value="Лондон (UTC+0:00)">Лондон (UTC+0:00)</option>
-                    <option value="Лиссабон (UTC+0:00)">Лиссабон (UTC+0:00)</option>
-                    <option value="Берлин (UTC+1:00)">Берлин (UTC+1:00)</option>
-                    <option value="Париж (UTC+1:00)">Париж (UTC+1:00)</option>
-                    <option value="Мадрид (UTC+1:00)">Мадрид (UTC+1:00)</option>
-                    <option value="Рим (UTC+1:00)">Рим (UTC+1:00)</option>
-                    <option value="Москва (UTC+3:00)">Москва (UTC+3:00)</option>
-                    <option value="Стамбул (UTC+3:00)">Стамбул (UTC+3:00)</option>
-                    <option value="Дубай (UTC+4:00)">Дубай (UTC+4:00)</option>
-                    <option value="Мумбаи (UTC+5:30)">Мумбаи (UTC+5:30)</option>
-                    <option value="Дели (UTC+5:30)">Дели (UTC+5:30)</option>
-                    <option value="Катманду (UTC+5:45)">Катманду (UTC+5:45)</option>
-                    <option value="Дакка (UTC+6:00)">Дакка (UTC+6:00)</option>
-                    <option value="Янгон (UTC+6:30)">Янгон (UTC+6:30)</option>
-                    <option value="Бангкок (UTC+7:00)">Бангкок (UTC+7:00)</option>
-                    <option value="Джакарта (UTC+7:00)">Джакарта (UTC+7:00)</option>
-                    <option value="Пекин (UTC+8:00)">Пекин (UTC+8:00)</option>
-                    <option value="Гонконг (UTC+8:00)">Гонконг (UTC+8:00)</option>
-                    <option value="Сингапур (UTC+8:00)">Сингапур (UTC+8:00)</option>
-                    <option value="Токио (UTC+9:00)">Токио (UTC+9:00)</option>
-                    <option value="Сеул (UTC+9:00)">Сеул (UTC+9:00)</option>
-                    <option value="Аделаида (UTC+9:30)">Аделаида (UTC+9:30)</option>
-                    <option value="Сидней (UTC+10:00)">Сидней (UTC+10:00)</option>
-                    <option value="Лорд-Хау (UTC+10:30)">Лорд-Хау (UTC+10:30)</option>
-                    <option value="Владивосток (UTC+10:00)">Владивосток (UTC+10:00)</option>
-                    <option value="Магадан (UTC+11:00)">Магадан (UTC+11:00)</option>
-                    <option value="Нумеа (UTC+11:00)">Нумеа (UTC+11:00)</option>
-                    <option value="Окленд (UTC+12:00)">Окленд (UTC+12:00)</option>
-                    <option value="Чатем (UTC+12:45)">Чатем (UTC+12:45)</option>
-                    <option value="Апиа (UTC+13:00)">Апиа (UTC+13:00)</option>
-                    <option value="Киртитайм (UTC+14:00)">Киртитайм (UTC+14:00)</option>
+                    <option value="-720">Бейкер-Айленд (UTC-12:00)</option>
+                    <option value="-660">Паго-Паго (UTC-11:00)</option>
+                    <option value="-600">Гонолулу (UTC-10:00)</option>
+                    <option value="-540">Анкоридж (UTC-9:00)</option>
+                    <option value="-480">Лос-Анджелес (UTC-8:00)</option>
+                    <option value="-420">Денвер (UTC-7:00)</option>
+                    <option value="-360">Чикаго (UTC-6:00)</option>
+                    <option value="-300">Нью-Йорк (UTC-5:00)</option>
+                    <option value="-240">Каракас (UTC-4:00)</option>
+                    <option value="-240">Сантьяго (UTC-4:00)</option>
+                    <option value="-210">Сент-Джонс (UTC-3:30)</option>
+                    <option value="-180">Сан-Паулу (UTC-3:00)</option>
+                    <option value="-120">Нуук (UTC-2:00)</option>
+                    <option value="-120">Фернанду-ди-Норонья (UTC-2:00)</option>
+                    <option value="-60">Прая (UTC-1:00)</option>
+                    <option value="0">Лондон (UTC+0:00)</option>
+                    <option value="0">Лиссабон (UTC+0:00)</option>
+                    <option value="60">Берлин (UTC+1:00)</option>
+                    <option value="60">Париж (UTC+1:00)</option>
+                    <option value="60">Мадрид (UTC+1:00)</option>
+                    <option value="60">Рим (UTC+1:00)</option>
+                    <option value="180">Москва (UTC+3:00)</option>
+                    <option value="180">Стамбул (UTC+3:00)</option>
+                    <option value="240">Дубай (UTC+4:00)</option>
+                    <option value="330">Мумбаи (UTC+5:30)</option>
+                    <option value="330">Дели (UTC+5:30)</option>
+                    <option value="345">Катманду (UTC+5:45)</option>
+                    <option value="360">Дакка (UTC+6:00)</option>
+                    <option value="390">Янгон (UTC+6:30)</option>
+                    <option value="420">Бангкок (UTC+7:00)</option>
+                    <option value="420">Джакарта (UTC+7:00)</option>
+                    <option value="480">Пекин (UTC+8:00)</option>
+                    <option value="480">Гонконг (UTC+8:00)</option>
+                    <option value="480">Сингапур (UTC+8:00)</option>
+                    <option value="540">Токио (UTC+9:00)</option>
+                    <option value="540">Сеул (UTC+9:00)</option>
+                    <option value="570">Аделаида (UTC+9:30)</option>
+                    <option value="600">Сидней (UTC+10:00)</option>
+                    <option value="630">Лорд-Хау (UTC+10:30)</option>
+                    <option value="600">Владивосток (UTC+10:00)</option>
+                    <option value="660">Магадан (UTC+11:00)</option>
+                    <option value="660">Нумеа (UTC+11:00)</option>
+                    <option value="720">Окленд (UTC+12:00)</option>
+                    <option value="765">Чатем (UTC+12:45)</option>
+                    <option value="780">Апиа (UTC+13:00)</option>
+                    <option value="840">Киртитайм (UTC+14:00)</option>
                 </select>
             </div>
             <div class="question">
@@ -263,37 +263,37 @@
             <div class="question">
                 <label id="labelParticipantLimit">13. Ограничение участников</label>
                 <select id="participantLimitType" onchange="toggleParticipantLimit()">
-                    <option value="Нет ограничения">Нет ограничения</option>
-                    <option value="Ограничение">Ограничение</option>
+                    <option value="no_limit">Нет ограничения</option>
+                    <option value="limited">Ограничение</option>
                 </select>
                 <input type="number" id="participantLimit" class="hidden" min="1" placeholder="Введите число">
             </div>
             <div class="question hidden" id="reserveQuestion">
                 <label id="labelReserve">14. Вносить в резерв при превышении?</label>
                 <select id="reserve">
-                    <option value="Да">Да</option>
-                    <option value="Нет">Нет</option>
+                    <option value="yes">Да</option>
+                    <option value="no">Нет</option>
                 </select>
             </div>
             <div class="question">
                 <label id="labelPaymentType">15. Мероприятие бесплатное/платное</label>
                 <select id="paymentType" onchange="togglePaymentOptions()">
-                    <option value="Бесплатное">Бесплатное</option>
-                    <option value="Платное">Платное</option>
+                    <option value="free">Бесплатное</option>
+                    <option value="paid">Платное</option>
                 </select>
             </div>
             <div class="question hidden" id="paymentDetails">
                 <label id="labelPaymentMethod">16. Тип оплаты</label>
                 <select id="paymentMethod">
-                    <option value="Предоплата">Предоплата</option>
-                    <option value="Постоплата">Постоплата</option>
+                    <option value="prepayment">Предоплата</option>
+                    <option value="postpayment">Постоплата</option>
                 </select>
             </div>
             <div class="question hidden" id="costDetails">
                 <label id="labelCost">17. Стоимость</label>
                 <select id="costType" onchange="toggleCostOptions()">
-                    <option value="Постоянная">Постоянная</option>
-                    <option value="Делится поровну">Делится поровну</option>
+                    <option value="fixed">Постоянная</option>
+                    <option value="split">Делится поровну</option>
                 </select>
                 <input type="number" id="fixedCost" class="hidden" min="0" placeholder="Введите сумму">
             </div>
@@ -562,9 +562,9 @@
                 labelDuration: "7. Duración",
                 durationUnits: ["Minutos", "Horas", "Días"],
                 labelPollStart: "8. Iniciar Encuesta de Participantes Antes",
-                pollStartUnits: ["Minutos", "Horas", "Días"],
+                pollStartUnits: ["Minutos", "Horas", "Дни"],
                 labelPollEnd: "9. Finalizar Encuesta Antes",
-                pollEndUnits: ["Minutos", "Horas", "Días"],
+                pollEndUnits: ["Minutos", "Horas", "Дни"],
                 labelCityTimezone: "10. Ciudad y Zona Horaria",
                 cityTimezoneOptions: [
                     "Isla Baker (UTC-12:00)",
@@ -733,53 +733,64 @@
             // Обновление опций выпадающих списков
             const frequency = document.getElementById('frequency');
             const frequencyValue = frequency.value;
-            frequency.innerHTML = t.frequencyOptions.map((opt, i) => `<option value="${translations.ru.frequencyOptions[i]}"${opt === frequencyValue ? ' selected' : ''}>${opt}</option>`).join('');
+            frequency.innerHTML = t.frequencyOptions.map((opt, i) => `<option value="${['one_time', 'regular'][i]}"${['one_time', 'regular'][i] === frequencyValue ? ' selected' : ''}>${opt}</option>`).join('');
             
             const regularFrequency = document.getElementById('regularFrequency');
             const regularFrequencyValue = regularFrequency.value;
-            regularFrequency.innerHTML = t.regularFrequencyOptions.map((opt, i) => `<option value="${translations.ru.regularFrequencyOptions[i]}"${opt === regularFrequencyValue ? ' selected' : ''}>${opt}</option>`).join('');
+            regularFrequency.innerHTML = t.regularFrequencyOptions.map((opt, i) => `<option value="${['yearly', 'monthly', 'weekly'][i]}"${['yearly', 'monthly', 'weekly'][i] === regularFrequencyValue ? ' selected' : ''}>${opt}</option>`).join('');
             
             const durationUnit = document.getElementById('durationUnit');
             const durationUnitValue = durationUnit.value;
-            durationUnit.innerHTML = t.durationUnits.map((opt, i) => `<option value="${translations.ru.durationUnits[i]}"${opt === durationUnitValue ? ' selected' : ''}>${opt}</option>`).join('');
+            durationUnit.innerHTML = t.durationUnits.map((opt, i) => `<option value="${['minutes', 'hours', 'days'][i]}"${['minutes', 'hours', 'days'][i] === durationUnitValue ? ' selected' : ''}>${opt}</option>`).join('');
             
             const pollStartUnit = document.getElementById('pollStartUnit');
             const pollStartUnitValue = pollStartUnit.value;
-            pollStartUnit.innerHTML = t.pollStartUnits.map((opt, i) => `<option value="${translations.ru.pollStartUnits[i]}"${opt === pollStartUnitValue ? ' selected' : ''}>${opt}</option>`).join('');
+            pollStartUnit.innerHTML = t.pollStartUnits.map((opt, i) => `<option value="${['minutes', 'hours', 'days'][i]}"${['minutes', 'hours', 'days'][i] === pollStartUnitValue ? ' selected' : ''}>${opt}</option>`).join('');
             
             const pollEndUnit = document.getElementById('pollEndUnit');
             const pollEndUnitValue = pollEndUnit.value;
-            pollEndUnit.innerHTML = t.pollEndUnits.map((opt, i) => `<option value="${translations.ru.pollEndUnits[i]}"${opt === pollEndUnitValue ? ' selected' : ''}>${opt}</option>`).join('');
+            pollEndUnit.innerHTML = t.pollEndUnits.map((opt, i) => `<option value="${['minutes', 'hours', 'days'][i]}"${['minutes', 'hours', 'days'][i] === pollEndUnitValue ? ' selected' : ''}>${opt}</option>`).join('');
             
             const cityTimezone = document.getElementById('cityTimezone');
             const cityTimezoneValue = cityTimezone.value;
-            cityTimezone.innerHTML = t.cityTimezoneOptions.map((opt, i) => `<option value="${translations.ru.cityTimezoneOptions[i]}"${opt === cityTimezoneValue ? ' selected' : ''}>${opt}</option>`).join('');
+            cityTimezone.innerHTML = t.cityTimezoneOptions.map((opt, i) => {
+                const timezoneValues = [
+                    "-720", "-660", "-600", "-540", "-480", "-420", "-360", "-300", 
+                    "-240", "-240", "-210", "-180", "-120", "-120", "-60", 
+                    "0", "0", "60", "60", "60", "60", 
+                    "180", "180", "240", "330", "330", "345", 
+                    "360", "390", "420", "420", "480", "480", "480", 
+                    "540", "540", "570", "600", "630", "600", 
+                    "660", "660", "720", "765", "780", "840"
+                ];
+                return `<option value="${timezoneValues[i]}"${timezoneValues[i] === cityTimezoneValue ? ' selected' : ''}>${opt}</option>`;
+            }).join('');
             
             const participantLimitType = document.getElementById('participantLimitType');
             const participantLimitTypeValue = participantLimitType.value;
-            participantLimitType.innerHTML = t.participantLimitOptions.map((opt, i) => `<option value="${translations.ru.participantLimitOptions[i]}"${opt === participantLimitTypeValue ? ' selected' : ''}>${opt}</option>`).join('');
+            participantLimitType.innerHTML = t.participantLimitOptions.map((opt, i) => `<option value="${['no_limit', 'limited'][i]}"${['no_limit', 'limited'][i] === participantLimitTypeValue ? ' selected' : ''}>${opt}</option>`).join('');
             
             const reserve = document.getElementById('reserve');
             const reserveValue = reserve.value;
-            reserve.innerHTML = t.reserveOptions.map((opt, i) => `<option value="${translations.ru.reserveOptions[i]}"${opt === reserveValue ? ' selected' : ''}>${opt}</option>`).join('');
+            reserve.innerHTML = t.reserveOptions.map((opt, i) => `<option value="${['yes', 'no'][i]}"${['yes', 'no'][i] === reserveValue ? ' selected' : ''}>${opt}</option>`).join('');
             
             const paymentType = document.getElementById('paymentType');
             const paymentTypeValue = paymentType.value;
-            paymentType.innerHTML = t.paymentTypeOptions.map((opt, i) => `<option value="${translations.ru.paymentTypeOptions[i]}"${opt === paymentTypeValue ? ' selected' : ''}>${opt}</option>`).join('');
+            paymentType.innerHTML = t.paymentTypeOptions.map((opt, i) => `<option value="${['free', 'paid'][i]}"${['free', 'paid'][i] === paymentTypeValue ? ' selected' : ''}>${opt}</option>`).join('');
             
             const paymentMethod = document.getElementById('paymentMethod');
             const paymentMethodValue = paymentMethod.value;
-            paymentMethod.innerHTML = t.paymentMethodOptions.map((opt, i) => `<option value="${translations.ru.paymentMethodOptions[i]}"${opt === paymentMethodValue ? ' selected' : ''}>${opt}</option>`).join('');
+            paymentMethod.innerHTML = t.paymentMethodOptions.map((opt, i) => `<option value="${['prepayment', 'postpayment'][i]}"${['prepayment', 'postpayment'][i] === paymentMethodValue ? ' selected' : ''}>${opt}</option>`).join('');
             
             const costType = document.getElementById('costType');
             const costTypeValue = costType.value;
-            costType.innerHTML = t.costTypeOptions.map((opt, i) => `<option value="${translations.ru.costTypeOptions[i]}"${opt === costTypeValue ? ' selected' : ''}>${opt}</option>`).join('');
+            costType.innerHTML = t.costTypeOptions.map((opt, i) => `<option value="${['fixed', 'split'][i]}"${['fixed', 'split'][i] === costTypeValue ? ' selected' : ''}>${opt}</option>`).join('');
 
             // Обновление календаря дней недели
             const weeklyDays = document.querySelectorAll('#weeklyDaysCalendar div');
             weeklyDays.forEach((day, index) => {
                 day.textContent = t.weeklyDays[index];
-                day.dataset.day = translations.ru.weeklyDays[index];
+                day.dataset.day = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'][index];
             });
 
             // Обновление годового календаря, если он виден
@@ -794,41 +805,41 @@
         // Переключение опций периодичности
         function toggleFrequencyOptions() {
             const frequency = document.getElementById('frequency').value;
-            document.getElementById('regularOptions').classList.toggle('hidden', frequency !== translations.ru.frequencyOptions[1]);
-            document.getElementById('oneTimeDate').classList.toggle('hidden', frequency !== translations.ru.frequencyOptions[0]);
+            document.getElementById('regularOptions').classList.toggle('hidden', frequency !== 'regular');
+            document.getElementById('oneTimeDate').classList.toggle('hidden', frequency !== 'one_time');
             document.getElementById('yearlyDates').classList.add('hidden');
             document.getElementById('weeklyDays').classList.add('hidden');
-            if (frequency === translations.ru.frequencyOptions[1]) toggleRegularOptions();
+            if (frequency === 'regular') toggleRegularOptions();
         }
 
         // Переключение опций регулярных встреч
         function toggleRegularOptions() {
             const regularFrequency = document.getElementById('regularFrequency').value;
-            document.getElementById('yearlyDates').classList.toggle('hidden', regularFrequency !== translations.ru.regularFrequencyOptions[0]);
-            document.getElementById('monthlyDayNumber').classList.toggle('hidden', regularFrequency !== translations.ru.regularFrequencyOptions[1]);
-            document.getElementById('weeklyDays').classList.toggle('hidden', regularFrequency !== translations.ru.regularFrequencyOptions[2]);
-            if (regularFrequency === translations.ru.regularFrequencyOptions[0]) generateYearlyCalendar();
+            document.getElementById('yearlyDates').classList.toggle('hidden', regularFrequency !== 'yearly');
+            document.getElementById('monthlyDayNumber').classList.toggle('hidden', regularFrequency !== 'monthly');
+            document.getElementById('weeklyDays').classList.toggle('hidden', regularFrequency !== 'weekly');
+            if (regularFrequency === 'yearly') generateYearlyCalendar();
         }
 
         // Переключение ограничения участников и резерва
         function toggleParticipantLimit() {
             const limitType = document.getElementById('participantLimitType').value;
-            document.getElementById('participantLimit').classList.toggle('hidden', limitType !== translations.ru.participantLimitOptions[1]);
-            document.getElementById('reserveQuestion').classList.toggle('hidden', limitType !== translations.ru.participantLimitOptions[1]);
+            document.getElementById('participantLimit').classList.toggle('hidden', limitType !== 'limited');
+            document.getElementById('reserveQuestion').classList.toggle('hidden', limitType !== 'limited');
         }
 
         // Переключение опций оплаты
         function togglePaymentOptions() {
             const paymentType = document.getElementById('paymentType').value;
-            document.getElementById('paymentDetails').classList.toggle('hidden', paymentType !== translations.ru.paymentTypeOptions[1]);
-            document.getElementById('costDetails').classList.toggle('hidden', paymentType !== translations.ru.paymentTypeOptions[1]);
+            document.getElementById('paymentDetails').classList.toggle('hidden', paymentType !== 'paid');
+            document.getElementById('costDetails').classList.toggle('hidden', paymentType !== 'paid');
             toggleCostOptions();
         }
 
         // Переключение опций стоимости
         function toggleCostOptions() {
             const costType = document.getElementById('costType')?.value;
-            document.getElementById('fixedCost').classList.toggle('hidden', costType !== translations.ru.costTypeOptions[0]);
+            document.getElementById('fixedCost').classList.toggle('hidden', costType !== 'fixed');
         }
 
         // Обработка кликов по дням недели
@@ -879,24 +890,24 @@
             const message = `
 ${t.messageHeader}
 1. ${t.messageEventName}: ${answers.eventName}
-2. ${t.messageFrequency}: ${t.frequencyOptions[translations.ru.frequencyOptions.indexOf(answers.frequency)]}
-${answers.frequency === translations.ru.frequencyOptions[1] ? `3. ${t.messageRegularFrequency}: ${t.regularFrequencyOptions[translations.ru.regularFrequencyOptions.indexOf(answers.regularFrequency)]}` : ''}
-${answers.regularFrequency === translations.ru.regularFrequencyOptions[0] ? `4. ${t.messageYearlyDates}: ${answers.yearlyDates.join(', ') || t.notSelected}` : ''}
-${answers.regularFrequency === translations.ru.regularFrequencyOptions[1] ? `4. ${t.messageMonthlyDayNumber}: ${answers.dayNumber}` : ''}
-${answers.regularFrequency === translations.ru.regularFrequencyOptions[2] ? `4. ${t.messageWeeklyDays}: ${answers.weeklyDays.join(', ') || t.notSelected}` : ''}
-${answers.frequency === translations.ru.frequencyOptions[0] ? `4. ${t.messageOneTimeDate}: ${answers.startDate}` : ''}
+2. ${t.messageFrequency}: ${t.frequencyOptions[['one_time', 'regular'].indexOf(answers.frequency)]}
+${answers.frequency === 'regular' ? `3. ${t.messageRegularFrequency}: ${t.regularFrequencyOptions[['yearly', 'monthly', 'weekly'].indexOf(answers.regularFrequency)]}` : ''}
+${answers.regularFrequency === 'yearly' ? `4. ${t.messageYearlyDates}: ${answers.yearlyDates.join(', ') || t.notSelected}` : ''}
+${answers.regularFrequency === 'monthly' ? `4. ${t.messageMonthlyDayNumber}: ${answers.dayNumber}` : ''}
+${answers.regularFrequency === 'weekly' ? `4. ${t.messageWeeklyDays}: ${answers.weeklyDays.join(', ') || t.notSelected}` : ''}
+${answers.frequency === 'one_time' ? `4. ${t.messageOneTimeDate}: ${answers.startDate}` : ''}
 5. ${t.messageStartTime}: ${answers.startTime}
-6. ${t.messageDuration}: ${answers.duration.value} ${t.durationUnits[translations.ru.durationUnits.indexOf(answers.duration.unit)]}
-7. ${t.messagePollStart}: ${answers.pollStart.value} ${t.pollStartUnits[translations.ru.pollStartUnits.indexOf(answers.pollStart.unit)]}
-8. ${t.messagePollEnd}: ${answers.pollEnd.value} ${t.pollEndUnits[translations.ru.pollEndUnits.indexOf(answers.pollEnd.unit)]}
-9. ${t.messageCityTimezone}: ${t.cityTimezoneOptions[translations.ru.cityTimezoneOptions.indexOf(answers.cityTimezone)]}
+6. ${t.messageDuration}: ${answers.duration.value} ${t.durationUnits[['minutes', 'hours', 'days'].indexOf(answers.duration.unit)]}
+7. ${t.messagePollStart}: ${answers.pollStart.value} ${t.pollStartUnits[['minutes', 'hours', 'days'].indexOf(answers.pollStart.unit)]}
+8. ${t.messagePollEnd}: ${answers.pollEnd.value} ${t.pollEndUnits[['minutes', 'hours', 'days'].indexOf(answers.pollEnd.unit)]}
+9. ${t.messageCityTimezone}: ${answers.cityTimezone} minutes
 10. ${t.messageLocation}: ${answers.location}
 11. ${t.messageComment}: ${answers.comment}
-12. ${t.messageParticipantLimit}: ${t.participantLimitOptions[translations.ru.participantLimitOptions.indexOf(answers.participantLimitType)]}${answers.participantLimitType === translations.ru.participantLimitOptions[1] ? ` (${answers.participantLimit})` : ''}
-${answers.participantLimitType === translations.ru.participantLimitOptions[1] ? `13. ${t.messageReserve}: ${t.reserveOptions[translations.ru.reserveOptions.indexOf(answers.reserve)]}` : ''}
-14. ${t.messagePaymentType}: ${t.paymentTypeOptions[translations.ru.paymentTypeOptions.indexOf(answers.paymentType)]}
-${answers.paymentType === translations.ru.paymentTypeOptions[1] ? `15. ${t.messagePaymentMethod}: ${t.paymentMethodOptions[translations.ru.paymentMethodOptions.indexOf(answers.paymentMethod)]}` : ''}
-${answers.paymentType === translations.ru.paymentTypeOptions[1] ? `16. ${t.messageCost}: ${t.costTypeOptions[translations.ru.costTypeOptions.indexOf(answers.costType)]}${answers.costType === translations.ru.costTypeOptions[0] ? ` (${answers.fixedCost})` : ''}` : ''}
+12. ${t.messageParticipantLimit}: ${t.participantLimitOptions[['no_limit', 'limited'].indexOf(answers.participantLimitType)]}${answers.participantLimitType === 'limited' ? ` (${answers.participantLimit})` : ''}
+${answers.participantLimitType === 'limited' ? `13. ${t.messageReserve}: ${t.reserveOptions[['yes', 'no'].indexOf(answers.reserve)]}` : ''}
+14. ${t.messagePaymentType}: ${t.paymentTypeOptions[['free', 'paid'].indexOf(answers.paymentType)]}
+${answers.paymentType === 'paid' ? `15. ${t.messagePaymentMethod}: ${t.paymentMethodOptions[['prepayment', 'postpayment'].indexOf(answers.paymentMethod)]}` : ''}
+${answers.paymentType === 'paid' ? `16. ${t.messageCost}: ${t.costTypeOptions[['fixed', 'split'].indexOf(answers.costType)]}${answers.costType === 'fixed' ? ` (${answers.fixedCost})` : ''}` : ''}
             `;
 
             fetch('https://invite-event-sport.online:8443/save-message', {
